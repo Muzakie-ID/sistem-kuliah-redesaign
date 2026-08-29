@@ -4,6 +4,7 @@ import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
 import EmergencyOverrideModal from '../../Components/EmergencyOverrideModal';
 import ScheduleFormModal from '../../Components/ScheduleFormModal';
 import ScheduleCard from '../../Components/ScheduleCard';
+import ConfirmDialog from '../../Components/ConfirmDialog';
 import { CalendarDays, Coffee, Plus } from 'lucide-react';
 
 export default function SchedulesIndex({ weeklySchedules = {}, makeupSchedules = {}, currentDayOfWeek = 1, manageableSubjects = [], allSchedules = [] }) {
@@ -14,6 +15,7 @@ export default function SchedulesIndex({ weeklySchedules = {}, makeupSchedules =
     const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
     const [selectedScheduleId, setSelectedScheduleId] = useState(null);
     const [formModal, setFormModal] = useState(null); // null | { schedule } | { schedule: null }
+    const [confirmDialog, setConfirmDialog] = useState(null); // null | { title, message, confirmLabel, action }
 
     const canManage = user?.is_pj;
 
@@ -117,11 +119,12 @@ export default function SchedulesIndex({ weeklySchedules = {}, makeupSchedules =
                             onManage={canManage ? (id) => openEmergencyModal(id) : null}
                             manageLabel="Kelola / Override"
                             onEdit={canManage ? () => setFormModal({ schedule }) : null}
-                            onDelete={canManage ? () => {
-                                if (confirm(`Hapus jadwal ${schedule.subject_name} (${schedule.day_name})? Override terkait juga akan terhapus.`)) {
-                                    router.delete(route('schedules.destroy', schedule.id));
-                                }
-                            } : null}
+                            onDelete={canManage ? () => setConfirmDialog({
+                                title: 'Hapus Jadwal',
+                                message: `Hapus jadwal ${schedule.subject_name} (${schedule.day_name})? Override terkait juga akan terhapus.`,
+                                confirmLabel: 'Ya, Hapus',
+                                action: () => router.delete(route('schedules.destroy', schedule.id)),
+                            }) : null}
                         />
                     ))}
                     {currentDayMakeups.map((schedule) => (
@@ -148,6 +151,16 @@ export default function SchedulesIndex({ weeklySchedules = {}, makeupSchedules =
                 subjects={manageableSubjects}
                 schedule={formModal?.schedule ?? null}
             />
+
+            {confirmDialog && (
+                <ConfirmDialog
+                    title={confirmDialog.title}
+                    message={confirmDialog.message}
+                    confirmLabel={confirmDialog.confirmLabel}
+                    onConfirm={() => { confirmDialog.action(); setConfirmDialog(null); }}
+                    onClose={() => setConfirmDialog(null)}
+                />
+            )}
         </AuthenticatedLayout>
     );
 }

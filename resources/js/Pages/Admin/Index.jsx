@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Head, router, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
 import Badge from '../../Components/Badge';
+import ConfirmDialog from '../../Components/ConfirmDialog';
 import { 
     Users, KeyRound, Send, History, ShieldAlert, 
     CheckCircle2, AlertCircle, RefreshCw, Search,
@@ -19,6 +20,7 @@ export default function AdminIndex({ users = [], subjects = [], wahaConfigs = []
     const [configSaveSuccess, setConfigSaveSuccess] = useState(false);
     const [userModal, setUserModal] = useState(null); // null | {mode:'create'} | {mode:'edit', user}
     const [subjectModal, setSubjectModal] = useState(null); // null | {mode:'create'} | {mode:'edit', subject}
+    const [confirmDialog, setConfirmDialog] = useState(null); // null | { title, message, confirmLabel, action }
 
     // Form Konfigurasi Server WAHA & JID Grup
     const configForm = useForm({
@@ -40,11 +42,12 @@ export default function AdminIndex({ users = [], subjects = [], wahaConfigs = []
     });
 
     const handleResetPin = (userId, userName) => {
-        if (confirm(`Apakah Anda yakin ingin mereset PIN untuk ${userName}? Akun akan dikembalikan ke status belum aktif agar mahasiswa dapat membuat PIN baru.`)) {
-            router.post(route('admin.users.reset-pin'), { user_id: userId }, {
-                preserveScroll: true,
-            });
-        }
+        setConfirmDialog({
+            title: 'Reset PIN',
+            message: `Apakah Anda yakin ingin mereset PIN untuk ${userName}? Akun akan dikembalikan ke status belum aktif agar mahasiswa dapat membuat PIN baru.`,
+            confirmLabel: 'Ya, Reset PIN',
+            action: () => router.post(route('admin.users.reset-pin'), { user_id: userId }, { preserveScroll: true }),
+        });
     };
 
     const handleSaveConfigSubmit = (e) => {
@@ -257,7 +260,12 @@ export default function AdminIndex({ users = [], subjects = [], wahaConfigs = []
                                         <span className="text-[11px] text-ink-faint italic">Siap Aktivasi</span>
                                     )}
                                     <button
-                                        onClick={() => { if (confirm(`Hapus akun ${u.name} (${u.niu})? Tindakan ini tidak dapat dibatalkan.`)) router.delete(route('admin.users.destroy', u.id), { preserveScroll: true }); }}
+                                        onClick={() => setConfirmDialog({
+                                            title: 'Hapus Akun',
+                                            message: `Hapus akun ${u.name} (${u.niu})? Tindakan ini tidak dapat dibatalkan.`,
+                                            confirmLabel: 'Ya, Hapus',
+                                            action: () => router.delete(route('admin.users.destroy', u.id), { preserveScroll: true }),
+                                        })}
                                         className="grid place-items-center w-9 h-9 rounded-xl bg-elevated hover:bg-rose-50 dark:hover:bg-rose-500/15 text-ink-soft hover:text-cancelled border border-line transition-colors active:scale-95"
                                         title={`Hapus ${u.name}`}
                                         aria-label={`Hapus ${u.name}`}
@@ -317,7 +325,12 @@ export default function AdminIndex({ users = [], subjects = [], wahaConfigs = []
                                         <Pencil className="w-3.5 h-3.5" />
                                     </button>
                                     <button
-                                        onClick={() => { if (confirm(`Hapus mata pelajaran "${s.name}"?`)) router.delete(route('admin.subjects.destroy', s.id), { preserveScroll: true }); }}
+                                        onClick={() => setConfirmDialog({
+                                            title: 'Hapus Mata Pelajaran',
+                                            message: `Hapus mata pelajaran "${s.name}"?`,
+                                            confirmLabel: 'Ya, Hapus',
+                                            action: () => router.delete(route('admin.subjects.destroy', s.id), { preserveScroll: true }),
+                                        })}
                                         className="grid place-items-center w-9 h-9 rounded-xl bg-elevated hover:bg-rose-50 dark:hover:bg-rose-500/15 text-ink-soft hover:text-cancelled border border-line transition-colors active:scale-95"
                                         title={`Hapus ${s.name}`}
                                         aria-label={`Hapus ${s.name}`}
@@ -613,6 +626,15 @@ export default function AdminIndex({ users = [], subjects = [], wahaConfigs = []
                             onSuccess: () => setSubjectModal(null),
                         });
                     }}
+                />
+            )}
+            {confirmDialog && (
+                <ConfirmDialog
+                    title={confirmDialog.title}
+                    message={confirmDialog.message}
+                    confirmLabel={confirmDialog.confirmLabel}
+                    onConfirm={() => { confirmDialog.action(); setConfirmDialog(null); }}
+                    onClose={() => setConfirmDialog(null)}
                 />
             )}
         </AuthenticatedLayout>
