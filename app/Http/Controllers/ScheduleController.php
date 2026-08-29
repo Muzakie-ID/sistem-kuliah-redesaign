@@ -155,4 +155,60 @@ class ScheduleController extends Controller
 
         return redirect()->back()->with('success', 'Status jadwal berhasil diperbarui' . ($blastSent ? ' dan blast WhatsApp telah dikirim!' : '.'));
     }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+        if (!$user->isPj()) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki hak akses.');
+        }
+
+        $validated = $this->validateSchedule($request);
+
+        if (!$user->isPjForSubject($validated['subject_id'])) {
+            return redirect()->back()->with('error', 'Anda bukan PJ mata kuliah ini.');
+        }
+
+        Schedule::create($validated);
+
+        return redirect()->back()->with('success', 'Jadwal berhasil ditambahkan.');
+    }
+
+    public function update(Request $request, Schedule $schedule): RedirectResponse
+    {
+        $user = Auth::user();
+        if (!$user->isPjForSubject($schedule->subject_id)) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki hak akses untuk jadwal ini.');
+        }
+
+        $schedule->update($this->validateSchedule($request));
+
+        return redirect()->back()->with('success', 'Jadwal berhasil diperbarui.');
+    }
+
+    public function destroy(Schedule $schedule): RedirectResponse
+    {
+        $user = Auth::user();
+        if (!$user->isPjForSubject($schedule->subject_id)) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki hak akses untuk jadwal ini.');
+        }
+
+        $schedule->delete();
+
+        return redirect()->back()->with('success', 'Jadwal berhasil dihapus.');
+    }
+
+    private function validateSchedule(Request $request): array
+    {
+        return $request->validate([
+            'subject_id' => ['required', 'exists:subjects,id'],
+            'target_group' => ['required', 'in:ALL_THEORY,B1_PRACTICUM,B2_PRACTICUM'],
+            'day_of_week' => ['required', 'integer', 'min:1', 'max:7'],
+            'start_time' => ['required', 'date_format:H:i'],
+            'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
+            'room' => ['required', 'string', 'max:50'],
+            'lecturer_name' => ['required', 'string', 'max:100'],
+            'meeting_url' => ['nullable', 'string', 'max:500'],
+        ]);
+    }
 }

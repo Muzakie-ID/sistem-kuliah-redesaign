@@ -1,9 +1,10 @@
 ﻿import React, { useState } from 'react';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, usePage, router } from '@inertiajs/react';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
 import EmergencyOverrideModal from '../../Components/EmergencyOverrideModal';
+import ScheduleFormModal from '../../Components/ScheduleFormModal';
 import ScheduleCard from '../../Components/ScheduleCard';
-import { CalendarDays, Coffee } from 'lucide-react';
+import { CalendarDays, Coffee, Plus } from 'lucide-react';
 
 export default function SchedulesIndex({ weeklySchedules = {}, currentDayOfWeek = 1, manageableSubjects = [], allSchedules = [] }) {
     const { auth } = usePage().props;
@@ -12,6 +13,9 @@ export default function SchedulesIndex({ weeklySchedules = {}, currentDayOfWeek 
     const [selectedDay, setSelectedDay] = useState(currentDayOfWeek <= 6 ? currentDayOfWeek : 1);
     const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
     const [selectedScheduleId, setSelectedScheduleId] = useState(null);
+    const [formModal, setFormModal] = useState(null); // null | { schedule } | { schedule: null }
+
+    const canManage = user?.is_pj;
 
     const days = [
         { id: 1, name: 'Senin', short: 'Sen' },
@@ -78,9 +82,20 @@ export default function SchedulesIndex({ weeklySchedules = {}, currentDayOfWeek 
                     <CalendarDays className="w-4 h-4 text-primary-600 dark:text-primary-400" />
                     Hari {days.find(d => d.id === selectedDay)?.name}
                 </h3>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-elevated text-ink-soft">
-                    {currentDaySchedules.length} Kelas
-                </span>
+                <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-elevated text-ink-soft">
+                        {currentDaySchedules.length} Kelas
+                    </span>
+                    {canManage && (
+                        <button
+                            onClick={() => setFormModal({ schedule: null })}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-500 hover:to-indigo-500 text-white text-xs font-bold shadow-btn transition-all active:scale-95"
+                        >
+                            <Plus className="w-3.5 h-3.5" />
+                            Tambah Jadwal
+                        </button>
+                    )}
+                </div>
             </div>
 
             {/* Schedule Cards */}
@@ -98,8 +113,14 @@ export default function SchedulesIndex({ weeklySchedules = {}, currentDayOfWeek 
                         <ScheduleCard
                             key={schedule.id}
                             schedule={schedule}
-                            onManage={user?.is_pj ? (id) => openEmergencyModal(id) : null}
+                            onManage={canManage ? (id) => openEmergencyModal(id) : null}
                             manageLabel="Kelola / Override"
+                            onEdit={canManage ? () => setFormModal({ schedule }) : null}
+                            onDelete={canManage ? () => {
+                                if (confirm(`Hapus jadwal ${schedule.subject_name} (${schedule.day_name})? Override terkait juga akan terhapus.`)) {
+                                    router.delete(route('schedules.destroy', schedule.id));
+                                }
+                            } : null}
                         />
                     ))}
                 </div>
@@ -111,6 +132,14 @@ export default function SchedulesIndex({ weeklySchedules = {}, currentDayOfWeek 
                 onClose={() => setIsEmergencyModalOpen(false)}
                 schedules={allSchedules.length > 0 ? allSchedules : currentDaySchedules}
                 defaultScheduleId={selectedScheduleId}
+            />
+
+            {/* Create/Edit Schedule Modal */}
+            <ScheduleFormModal
+                isOpen={!!formModal}
+                onClose={() => setFormModal(null)}
+                subjects={manageableSubjects}
+                schedule={formModal?.schedule ?? null}
             />
         </AuthenticatedLayout>
     );

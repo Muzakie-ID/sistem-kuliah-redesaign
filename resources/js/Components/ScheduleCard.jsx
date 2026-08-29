@@ -1,12 +1,12 @@
 import React from 'react';
-import { Video, MapPin, User, Clock, Info, CalendarClock, CalendarX2 } from 'lucide-react';
+import { Video, MapPin, User, Clock, Info, CalendarClock, CalendarX2, Pencil, Trash2 } from 'lucide-react';
 import Badge from './Badge';
 
 /**
  * Card jadwal tunggal. Dipakai di Dashboard dan Schedules.
  * Status dibaca lewat rail berwarna di sisi kiri + badge.
  */
-export default function ScheduleCard({ schedule, onManage, manageLabel = 'Edit Status' }) {
+export default function ScheduleCard({ schedule, onManage, manageLabel = 'Edit Status', onEdit, onDelete }) {
     const isOnline = schedule.status === 'ONLINE';
     const isRescheduled = schedule.status === 'RESCHEDULED' || schedule.status === 'MAKEUP_CLASS';
     const isCancelled = schedule.status === 'CANCELLED';
@@ -91,12 +91,32 @@ export default function ScheduleCard({ schedule, onManage, manageLabel = 'Edit S
                 )}
 
                 {onManage && (
-                    <button
-                        onClick={() => onManage(schedule.id)}
-                        className="text-xs font-bold text-ink-soft hover:text-online px-3 py-1.5 rounded-full hover:bg-online-bg transition-colors"
-                    >
-                        {manageLabel}
-                    </button>
+                    <div className="flex items-center gap-1">
+                        {onEdit && (
+                            <button
+                                onClick={onEdit}
+                                aria-label="Edit jadwal"
+                                className="p-2 rounded-full text-ink-faint hover:text-primary-600 hover:bg-primary-500/10 transition-colors"
+                            >
+                                <Pencil className="w-3.5 h-3.5" />
+                            </button>
+                        )}
+                        {onDelete && (
+                            <button
+                                onClick={onDelete}
+                                aria-label="Hapus jadwal"
+                                className="p-2 rounded-full text-ink-faint hover:text-cancelled hover:bg-cancelled/10 transition-colors"
+                            >
+                                <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                        )}
+                        <button
+                            onClick={() => onManage(schedule.id)}
+                            className="text-xs font-bold text-ink-soft hover:text-online px-3 py-1.5 rounded-full hover:bg-online-bg transition-colors"
+                        >
+                            {manageLabel}
+                        </button>
+                    </div>
                 )}
             </div>
         </article>

@@ -29,6 +29,9 @@ Route::middleware('auth')->group(function () {
 
     // Jadwal
     Route::get('/schedules', [ScheduleController::class, 'index'])->name('schedules.index');
+    Route::post('/schedules', [ScheduleController::class, 'store'])->name('schedules.store');
+    Route::put('/schedules/{schedule}', [ScheduleController::class, 'update'])->name('schedules.update');
+    Route::delete('/schedules/{schedule}', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
     Route::post('/schedules/override', [ScheduleController::class, 'storeOverride'])->name('schedules.override');
 
     // Tugas
