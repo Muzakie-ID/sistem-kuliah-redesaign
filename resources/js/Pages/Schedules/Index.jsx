@@ -6,7 +6,7 @@ import ScheduleFormModal from '../../Components/ScheduleFormModal';
 import ScheduleCard from '../../Components/ScheduleCard';
 import { CalendarDays, Coffee, Plus } from 'lucide-react';
 
-export default function SchedulesIndex({ weeklySchedules = {}, currentDayOfWeek = 1, manageableSubjects = [], allSchedules = [] }) {
+export default function SchedulesIndex({ weeklySchedules = {}, makeupSchedules = {}, currentDayOfWeek = 1, manageableSubjects = [], allSchedules = [] }) {
     const { auth } = usePage().props;
     const user = auth?.user;
 
@@ -27,6 +27,7 @@ export default function SchedulesIndex({ weeklySchedules = {}, currentDayOfWeek 
     ];
 
     const currentDaySchedules = weeklySchedules[selectedDay] || [];
+    const currentDayMakeups = makeupSchedules[selectedDay] || [];
 
     const openEmergencyModal = (scheduleId = null) => {
         setSelectedScheduleId(scheduleId);
@@ -84,7 +85,7 @@ export default function SchedulesIndex({ weeklySchedules = {}, currentDayOfWeek 
                 </h3>
                 <div className="flex items-center gap-2">
                     <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-elevated text-ink-soft">
-                        {currentDaySchedules.length} Kelas
+                        {currentDaySchedules.length + currentDayMakeups.length} Kelas
                     </span>
                     {canManage && (
                         <button
@@ -99,7 +100,7 @@ export default function SchedulesIndex({ weeklySchedules = {}, currentDayOfWeek 
             </div>
 
             {/* Schedule Cards */}
-            {currentDaySchedules.length === 0 ? (
+            {currentDaySchedules.length === 0 && currentDayMakeups.length === 0 ? (
                 <div className="rounded-3xl p-10 text-center bg-card border border-dashed border-line/60 animate-fade-in-up">
                     <span className="inline-grid place-items-center w-14 h-14 rounded-2xl bg-elevated text-ink-faint mb-3">
                         <Coffee className="w-7 h-7" />
@@ -121,6 +122,12 @@ export default function SchedulesIndex({ weeklySchedules = {}, currentDayOfWeek 
                                     router.delete(route('schedules.destroy', schedule.id));
                                 }
                             } : null}
+                        />
+                    ))}
+                    {currentDayMakeups.map((schedule) => (
+                        <ScheduleCard
+                            key={`makeup-${schedule.override.id}`}
+                            schedule={schedule}
                         />
                     ))}
                 </div>

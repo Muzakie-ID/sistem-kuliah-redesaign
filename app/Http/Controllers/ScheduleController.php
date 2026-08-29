@@ -31,19 +31,33 @@ class ScheduleController extends Controller
             ->orderBy('start_time')
             ->get();
 
-        // Ambil overrides minggu ini
+        // Ambil overrides minggu ini: perubahan pertemuan minggu ini ATAU kelas pengganti yang jatuh minggu ini
         $overrides = ScheduleOverride::with('schedule.subject')
-            ->whereBetween('original_date', [$startOfWeek, $endOfWeek])
-            ->get()
+            ->where(function ($q) use ($startOfWeek, $endOfWeek) {
+                $q->whereBetween('original_date', [$startOfWeek, $endOfWeek])
+                  ->orWhereBetween('new_date', [$startOfWeek, $endOfWeek]);
+            })
+            ->get();
+
+        // Perubahan pertemuan minggu ini → menempel ke kartu master
+        $overridesBySchedule = $overrides
+            ->filter(fn ($o) => $o->original_date->between($startOfWeek, $endOfWeek))
             ->keyBy('schedule_id');
 
+        // Kelas pengganti yang jatuh minggu ini → kartu tambahan di hari tujuan
+        $makeupOverrides = $overrides->filter(
+            fn ($o) => $o->new_date && $o->new_date->between($startOfWeek, $endOfWeek)
+        );
+
         $groupedSchedules = [];
+        $makeupSchedules = [];
         for ($day = 1; $day <= 6; $day++) {
             $groupedSchedules[$day] = [];
+            $makeupSchedules[$day] = [];
         }
 
         foreach ($schedules as $schedule) {
-            $override = $overrides->get($schedule->id);
+            $override = $overridesBySchedule->get($schedule->id);
             $status = $override ? $override->status : 'NORMAL';
 
             $groupedSchedules[$schedule->day_of_week][] = [
@@ -75,12 +89,60 @@ class ScheduleController extends Controller
             ];
         }
 
+        // Kartu kelas pengganti di hari tujuan (new_date) minggu ini
+        foreach ($makeupOverrides as $makeup) {
+            $schedule = $makeup->schedule;
+            if (!$schedule) {
+                continue;
+            }
+
+            $day = $makeup->new_date->dayOfWeekIso;
+            if ($day < 1 || $day > 6) {
+                continue;
+            }
+
+            $makeupSchedules[$day][] = [
+                'id' => $schedule->id,
+                'subject_id' => $schedule->subject_id,
+                'subject_name' => $schedule->subject->name ?? '',
+                'subject_code' => $schedule->subject->code ?? '',
+                'type' => $schedule->subject->type ?? 'THEORY',
+                'target_group' => $schedule->target_group,
+                'day_of_week' => $day,
+                'day_name' => $schedule->day_name,
+                'start_time' => $makeup->new_start_time ? substr($makeup->new_start_time, 0, 5) : substr($schedule->start_time, 0, 5),
+                'end_time' => $makeup->new_end_time ? substr($makeup->new_end_time, 0, 5) : substr($schedule->end_time, 0, 5),
+                'room' => $makeup->new_room ?? $schedule->room,
+                'lecturer_name' => $schedule->lecturer_name,
+                'status' => $makeup->status,
+                'override' => [
+                    'id' => $makeup->id,
+                    'status' => $makeup->status,
+                    'original_date' => $makeup->original_date->format('Y-m-d'),
+                    'new_date' => $makeup->new_date->format('Y-m-d'),
+                    'new_start_time' => $makeup->new_start_time ? substr($makeup->new_start_time, 0, 5) : null,
+                    'new_end_time' => $makeup->new_end_time ? substr($makeup->new_end_time, 0, 5) : null,
+                    'new_room' => $makeup->new_room,
+                    'meeting_url' => $makeup->meeting_url,
+                    'meeting_passcode' => $makeup->meeting_passcode,
+                    'reason' => $makeup->reason,
+                ],
+            ];
+        }
+
+        // Urutkan kartu pengganti per hari berdasarkan jam mulai
+        foreach ($makeupSchedules as $day => $items) {
+            usort($items, fn ($a, $b) => strcmp($a['start_time'], $b['start_time']));
+            $makeupSchedules[$day] = $items;
+        }
+
         $manageableSubjects = $user->isAdmin()
             ? Subject::all(['id', 'code', 'name', 'type'])
             : $user->pjSubjects()->get(['subjects.id', 'subjects.code', 'subjects.name', 'subjects.type']);
 
         return Inertia::render('Schedules/Index', [
             'weeklySchedules' => $groupedSchedules,
+            'makeupSchedules' => $makeupSchedules,
             'currentDayOfWeek' => Carbon::now()->dayOfWeekIso,
             'manageableSubjects' => $manageableSubjects,
             'allSchedules' => $schedules->map(fn ($s) => [
