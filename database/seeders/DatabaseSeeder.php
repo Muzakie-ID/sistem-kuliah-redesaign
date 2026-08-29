@@ -258,46 +258,6 @@ class DatabaseSeeder extends Seeder
             'created_by' => $pjWeb->id,
         ]);
 
-        // 7. TASKS
-        $task1 = Task::create([
-            'subject_id' => $prakTekkom->id,
-            'target_group' => 'B2_PRACTICUM',
-            'title' => 'Laporan Akhir Modul 3 (Rangkaian Listrik)',
-            'description' => 'Kerjakan pengukuran rangkaian listrik pada modul 3 dan upload file simulasi beserta laporan PDF.',
-            'deadline' => Carbon::now()->addHours(8),
-            'submission_url' => 'https://classroom.google.com/c/tekkom-b2',
-            'submission_format' => 'NIU_Nama_Modul3.pdf',
-            'created_by' => $pjJarkom->id,
-        ]);
-
-        $task2 = Task::create([
-            'subject_id' => $pemkom->id,
-            'target_group' => 'ALL_THEORY',
-            'title' => 'Mini Project: Program Manajemen Nilai Mahasiswa',
-            'description' => 'Buat program manajemen nilai mahasiswa dengan struktur data yang sesuai dan tuliskan laporan singkat.',
-            'deadline' => Carbon::now()->addDays(2),
-            'submission_url' => 'https://classroom.google.com/c/pemkom-bb',
-            'submission_format' => 'Link GitHub Repository',
-            'created_by' => $pjWeb->id,
-        ]);
-
-        $task3 = Task::create([
-            'subject_id' => $matdis->id,
-            'target_group' => 'ALL_THEORY',
-            'title' => 'Latihan Soal: Logika Matematika & Pembuktian',
-            'description' => 'Kerjakan latihan soal logika matematika, pembuktian induksi, dan relasi pada bab 1-3.',
-            'deadline' => Carbon::now()->addDays(5),
-            'submission_url' => 'https://classroom.google.com/c/matdis-bb',
-            'submission_format' => 'Kelompok_Latihan_Nama.pdf',
-            'created_by' => $admin->id,
-        ]);
-
-        // Personal completion contoh: Mahasiswa Adib sudah menyelesaikan Task 3
-        UserTaskCompletion::create([
-            'user_id' => $studentB1->id,
-            'task_id' => $task3->id,
-            'is_completed' => true,
-            'completed_at' => Carbon::now()->subDay(),
-        ]);
+        // 7. TASKS — dikosongkan (tugas diinput manual via aplikasi)
     }
 }
