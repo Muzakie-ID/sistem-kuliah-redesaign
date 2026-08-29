@@ -1,0 +1,59 @@
+﻿services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: class_schedule_app
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:80"
+    environment:
+      - APP_ENV=production
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=
+      - DB_USERNAME=
+      - DB_PASSWORD=
+      - WAHA_BASE_URL=http://waha:3000
+    depends_on:
+      - db
+      - waha
+    networks:
+      - class_network
+
+  db:
+    image: postgres:16-alpine
+    container_name: class_schedule_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: 
+      POSTGRES_USER: 
+      POSTGRES_PASSWORD: 
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - class_network
+
+  waha:
+    image: devlikeapro/waha
+    container_name: class_schedule_waha
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - WAHA_DASHBOARD_ENABLED=true
+      - WAHA_DASHBOARD_USERNAME=
+      - WAHA_DASHBOARD_PASSWORD=
+    volumes:
+      - waha_sessions:/app/.sessions
+    networks:
+      - class_network
+
+volumes:
+  pgdata:
+  waha_sessions:
+
+networks:
+  class_network:
+    driver: bridge
