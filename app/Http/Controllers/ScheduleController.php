@@ -103,6 +103,7 @@ class ScheduleController extends Controller
 
             $makeupSchedules[$day][] = [
                 'id' => $schedule->id,
+                'is_makeup' => true,
                 'subject_id' => $schedule->subject_id,
                 'subject_name' => $schedule->subject->name ?? '',
                 'subject_code' => $schedule->subject->code ?? '',

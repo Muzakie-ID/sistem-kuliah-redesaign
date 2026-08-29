@@ -15,6 +15,11 @@ export default function ScheduleCard({ schedule, onManage, manageLabel = 'Edit S
     const meetingPasscode = schedule.meeting_passcode || schedule.override?.meeting_passcode;
     const reason = schedule.reason || schedule.override?.reason;
 
+    // Info tanggal perubahan: kartu master yang digeser / kartu kelas pengganti
+    const fmt = (d) => d ? new Date(d).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : null;
+    const movedTo = !schedule.is_makeup && schedule.override?.new_date ? fmt(schedule.override.new_date) : null;
+    const makeupFrom = schedule.is_makeup && schedule.override?.original_date ? fmt(schedule.override.original_date) : null;
+
     const railClass = isOnline
         ? 'from-purple-500 to-violet-400'
         : isRescheduled
@@ -66,6 +71,20 @@ export default function ScheduleCard({ schedule, onManage, manageLabel = 'Edit S
                         <span>{schedule.room}</span>
                     )}
                 </div>
+
+                {movedTo && (
+                    <div className="flex items-center gap-1.5">
+                        <CalendarClock className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                        <span className="font-semibold text-amber-700 dark:text-amber-300">Digeser ke {movedTo}</span>
+                    </div>
+                )}
+
+                {makeupFrom && (
+                    <div className="flex items-center gap-1.5">
+                        <CalendarClock className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                        <span className="font-semibold text-amber-700 dark:text-amber-300">Kelas pengganti dari jadwal {makeupFrom}</span>
+                    </div>
+                )}
 
                 {reason && (
                     <div className="mt-2 flex items-start gap-1.5 p-2.5 rounded-xl bg-elevated/70 border border-line-soft text-xs text-ink-soft leading-relaxed">
