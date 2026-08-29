@@ -154,18 +154,18 @@ export default function AdminIndex({ users = [], subjects = [], wahaConfigs = []
             <Head title="Admin Panel & Manajemen Kelas" />
 
             {/* Header Banner */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-950 to-rose-950 p-5 mb-5 shadow-card animate-fade-in-up">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-50 via-white to-rose-50 dark:from-slate-900 dark:via-slate-950 dark:to-rose-950 border border-line p-5 mb-5 shadow-card animate-fade-in-up">
                 <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
                     <div className="absolute -top-10 -right-8 w-44 h-44 rounded-full bg-rose-500/20 blur-2xl"></div>
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(255_255_255/0.06)_1px,transparent_0)] bg-[size:18px_18px]"></div>
                 </div>
                 <div className="relative z-10">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-[11px] font-bold uppercase tracking-wider mb-2">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-[11px] font-bold uppercase tracking-wider mb-2">
                         <ShieldAlert className="w-3 h-3" />
                         Panel Khusus Komti
                     </span>
-                    <h2 className="text-xl font-extrabold text-white tracking-tight">Kontrol Sistem &amp; WhatsApp Gateway</h2>
-                    <p className="text-xs text-white/60 mt-1">Kelola akun mahasiswa, reset PIN, dan konfigurasi bot WhatsApp</p>
+                    <h2 className="text-xl font-extrabold text-ink tracking-tight dark:text-white">Kontrol Sistem &amp; WhatsApp Gateway</h2>
+                    <p className="text-xs text-ink-soft mt-1 dark:text-white/60">Kelola akun mahasiswa, reset PIN, dan konfigurasi bot WhatsApp</p>
                 </div>
             </div>
 
