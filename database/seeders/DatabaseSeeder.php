@@ -99,119 +99,156 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        // 3. SUBJECTS
-        $web = Subject::create([
-            'code' => 'TRI201',
-            'name' => 'Pemrograman Web Lanjut',
+        // 3. SUBJECTS (Data riil kelas BB & B2)
+        $matdis = Subject::create([
+            'code' => 'SVRI261101',
+            'name' => 'Matematika Diskrit',
             'type' => 'THEORY',
         ]);
-        $jarkom = Subject::create([
-            'code' => 'TRI202',
-            'name' => 'Praktikum Jaringan Komputer',
-            'type' => 'PRACTICUM',
-        ]);
-        $basisData = Subject::create([
-            'code' => 'TRI203',
-            'name' => 'Sistem Basis Data Terdistribusi',
+        $pemkom = Subject::create([
+            'code' => 'SVRI261102',
+            'name' => 'Pemrograman Komputer',
             'type' => 'THEORY',
         ]);
-        $os = Subject::create([
-            'code' => 'TRI204',
-            'name' => 'Praktikum Sistem Operasi',
+        $kodata = Subject::create([
+            'code' => 'SVRI261103',
+            'name' => 'Komunikasi Data',
+            'type' => 'THEORY',
+        ]);
+        $ttele = Subject::create([
+            'code' => 'SVRI261104',
+            'name' => 'Teknik Telekomunikasi',
+            'type' => 'THEORY',
+        ]);
+        $basisdata = Subject::create([
+            'code' => 'SVRI261105',
+            'name' => 'Basis Data',
+            'type' => 'THEORY',
+        ]);
+        $prakPemkom = Subject::create([
+            'code' => 'SVRI261106',
+            'name' => 'Praktikum Pemrograman Komputer',
             'type' => 'PRACTICUM',
         ]);
-        $rpl = Subject::create([
-            'code' => 'TRI205',
-            'name' => 'Rekayasa Perangkat Lunak',
+        $prakTekkom = Subject::create([
+            'code' => 'SVRI261107',
+            'name' => 'Praktikum Teknik Komputer',
+            'type' => 'PRACTICUM',
+        ]);
+        $prakPid = Subject::create([
+            'code' => 'SVRI261108',
+            'name' => 'Praktikum Pendukung Infrastruktur Digital',
+            'type' => 'PRACTICUM',
+        ]);
+        // Mata kuliah umum RI (belum terjadwal)
+        Subject::create([
+            'code' => 'UNKU260011',
+            'name' => 'Literasi Kesehatan',
+            'type' => 'THEORY',
+        ]);
+        Subject::create([
+            'code' => 'UNKU260012',
+            'name' => 'Humaniora Digital',
             'type' => 'THEORY',
         ]);
 
         // 4. COURSE PJS
-        CoursePj::create(['user_id' => $pjWeb->id, 'subject_id' => $web->id]);
-        CoursePj::create(['user_id' => $pjJarkom->id, 'subject_id' => $jarkom->id]);
+        CoursePj::create(['user_id' => $pjWeb->id, 'subject_id' => $pemkom->id]);
+        CoursePj::create(['user_id' => $pjJarkom->id, 'subject_id' => $prakTekkom->id]);
 
-        // 5. MASTER SCHEDULES
-        // Senin: Basis Data (Teori BB)
-        Schedule::create([
-            'subject_id' => $basisData->id,
+        // 5. MASTER SCHEDULES (Data riil kelas BB & B2)
+        // Senin: Praktikum Pendukung Infrastruktur Digital (B2)
+        $schPid = Schedule::create([
+            'subject_id' => $prakPid->id,
+            'target_group' => 'B2_PRACTICUM',
+            'day_of_week' => 1,
+            'start_time' => '12:15:00',
+            'end_time' => '15:55:00',
+            'room' => 'G. 103 Layanan Instalasi Listrik Lab TTL',
+            'lecturer_name' => 'Achmad Solaeman, S.Tr.T., M.Eng.',
+        ]);
+
+        // Selasa: Teknik Telekomunikasi (Teori BB)
+        $schTtele = Schedule::create([
+            'subject_id' => $ttele->id,
             'target_group' => 'ALL_THEORY',
-            'day_of_week' => 1,
-            'start_time' => '08:00:00',
-            'end_time' => '09:40:00',
-            'room' => 'Ruang Kuliah 201 (Gedung Vokasi Lt. 2)',
-            'lecturer_name' => 'Dr. Ir. Hendra Setiawan, M.T.',
+            'day_of_week' => 2,
+            'start_time' => '07:15:00',
+            'end_time' => '08:55:00',
+            'room' => 'R. KULIAH CM 201',
+            'lecturer_name' => 'Ir. Budi Bayu Murti, S.T., M.T.',
         ]);
 
-        // Senin: Praktikum Sistem Operasi (B1)
-        Schedule::create([
-            'subject_id' => $os->id,
-            'target_group' => 'B1_PRACTICUM',
-            'day_of_week' => 1,
-            'start_time' => '13:15:00',
-            'end_time' => '15:45:00',
-            'room' => 'Lab Komputer 1 (Gedung Vokasi Lt. 3)',
-            'lecturer_name' => 'Mas Dimas & Tim Aslab OS',
-        ]);
-
-        // Selasa: Praktikum Sistem Operasi (B2)
-        Schedule::create([
-            'subject_id' => $os->id,
+        // Selasa: Praktikum Pemrograman Komputer (B2)
+        $schPrakPemkom = Schedule::create([
+            'subject_id' => $prakPemkom->id,
             'target_group' => 'B2_PRACTICUM',
             'day_of_week' => 2,
-            'start_time' => '08:00:00',
-            'end_time' => '10:30:00',
-            'room' => 'Lab Komputer 1 (Gedung Vokasi Lt. 3)',
-            'lecturer_name' => 'Mas Dimas & Tim Aslab OS',
+            'start_time' => '12:15:00',
+            'end_time' => '15:55:00',
+            'room' => 'HS 103 Lab TAJ Layanan Komputasi Awan',
+            'lecturer_name' => 'Dr. Ir. Ronald Adrian, S.T., M.Eng., IPM.',
         ]);
 
-        // Rabu: Rekayasa Perangkat Lunak (Teori BB)
-        Schedule::create([
-            'subject_id' => $rpl->id,
+        // Rabu: Basis Data (Teori BB)
+        $schBasisData = Schedule::create([
+            'subject_id' => $basisdata->id,
             'target_group' => 'ALL_THEORY',
             'day_of_week' => 3,
-            'start_time' => '10:00:00',
-            'end_time' => '11:40:00',
-            'room' => 'Ruang Kuliah 202 (Gedung Vokasi Lt. 2)',
-            'lecturer_name' => 'Ibu Ratna Dewi, S.Kom., M.Cs.',
+            'start_time' => '07:15:00',
+            'end_time' => '08:55:00',
+            'room' => 'R. KULIAH CU 205',
+            'lecturer_name' => 'Achmad Solaeman, S.Tr.T., M.Eng.',
         ]);
 
-        // Kamis: Pemrograman Web Lanjut (Teori BB)
-        $schWeb = Schedule::create([
-            'subject_id' => $web->id,
+        // Rabu: Komunikasi Data (Teori BB)
+        $schKodata = Schedule::create([
+            'subject_id' => $kodata->id,
+            'target_group' => 'ALL_THEORY',
+            'day_of_week' => 3,
+            'start_time' => '09:15:00',
+            'end_time' => '10:55:00',
+            'room' => 'R. KULIAH HU 208',
+            'lecturer_name' => 'Ardhi Wicaksono Santoso, S.Kom., M.Cs.',
+        ]);
+
+        // Rabu: Praktikum Teknik Komputer (B2)
+        $schPrakTekkom = Schedule::create([
+            'subject_id' => $prakTekkom->id,
+            'target_group' => 'B2_PRACTICUM',
+            'day_of_week' => 3,
+            'start_time' => '12:15:00',
+            'end_time' => '15:55:00',
+            'room' => 'G. 302 Layanan Bengkel Listrik Lab Elektronika',
+            'lecturer_name' => 'Dr. Sahirul Alam, S.T., M.Eng.',
+        ]);
+
+        // Kamis: Pemrograman Komputer (Teori BB)
+        $schPemkom = Schedule::create([
+            'subject_id' => $pemkom->id,
             'target_group' => 'ALL_THEORY',
             'day_of_week' => 4,
-            'start_time' => '08:00:00',
-            'end_time' => '09:40:00',
-            'room' => 'Ruang Kuliah 203 (Gedung Vokasi Lt. 2)',
-            'lecturer_name' => 'Pak Budi Santoso, S.T., M.Kom.',
+            'start_time' => '07:15:00',
+            'end_time' => '08:55:00',
+            'room' => 'R. KULIAH HU 207',
+            'lecturer_name' => 'Dr. Ir. Ronald Adrian, S.T., M.Eng., IPM.',
         ]);
 
-        // Kamis: Praktikum Jaringan Komputer (B2)
-        $schJarkomB2 = Schedule::create([
-            'subject_id' => $jarkom->id,
-            'target_group' => 'B2_PRACTICUM',
+        // Kamis: Matematika Diskrit (Teori BB)
+        $schMatdis = Schedule::create([
+            'subject_id' => $matdis->id,
+            'target_group' => 'ALL_THEORY',
             'day_of_week' => 4,
-            'start_time' => '13:15:00',
-            'end_time' => '15:45:00',
-            'room' => 'Lab Jaringan 2 (Gedung Vokasi Lt. 2)',
-            'lecturer_name' => 'Mas Rangga & Tim Aslab Jarkom',
+            'start_time' => '09:15:00',
+            'end_time' => '10:55:00',
+            'room' => 'R. KULIAH CU 204',
+            'lecturer_name' => 'Ir. Yuris Mulya Saputra, S.T., M.Sc., Ph.D.',
         ]);
 
-        // Jumat: Praktikum Jaringan Komputer (B1)
-        Schedule::create([
-            'subject_id' => $jarkom->id,
-            'target_group' => 'B1_PRACTICUM',
-            'day_of_week' => 5,
-            'start_time' => '08:00:00',
-            'end_time' => '10:30:00',
-            'room' => 'Lab Jaringan 2 (Gedung Vokasi Lt. 2)',
-            'lecturer_name' => 'Mas Rangga & Tim Aslab Jarkom',
-        ]);
-
-        // 6. SCHEDULE OVERRIDE CONTOH (Kelas Web Lanjut dialihkan Zoom untuk hari ini / Kamis)
+        // 6. SCHEDULE OVERRIDE CONTOH (Kelas Praktikum Teknik Komputer dialihkan Zoom untuk hari ini)
         $today = Carbon::today();
         ScheduleOverride::create([
-            'schedule_id' => $schWeb->id,
+            'schedule_id' => $schPrakTekkom->id,
             'original_date' => $today->format('Y-m-d'),
             'status' => 'ONLINE',
             'meeting_url' => 'https://ugm-id.zoom.us/j/9876543210',
@@ -223,35 +260,35 @@ class DatabaseSeeder extends Seeder
 
         // 7. TASKS
         $task1 = Task::create([
-            'subject_id' => $jarkom->id,
+            'subject_id' => $prakTekkom->id,
             'target_group' => 'B2_PRACTICUM',
-            'title' => 'Laporan Akhir Modul 3 (Routing OSPF)',
-            'description' => 'Kerjakan konfigurasi multi-area OSPF pada Cisco Packet Tracer dan upload file PKT beserta laporan PDF.',
+            'title' => 'Laporan Akhir Modul 3 (Rangkaian Listrik)',
+            'description' => 'Kerjakan pengukuran rangkaian listrik pada modul 3 dan upload file simulasi beserta laporan PDF.',
             'deadline' => Carbon::now()->addHours(8),
-            'submission_url' => 'https://classroom.google.com/c/jarkom-b2',
+            'submission_url' => 'https://classroom.google.com/c/tekkom-b2',
             'submission_format' => 'NIU_Nama_Modul3.pdf',
             'created_by' => $pjJarkom->id,
         ]);
 
         $task2 = Task::create([
-            'subject_id' => $web->id,
+            'subject_id' => $pemkom->id,
             'target_group' => 'ALL_THEORY',
-            'title' => 'Mini Project: API Auth Sanctum & Inertia React',
-            'description' => 'Implementasikan REST API dengan Laravel Sanctum dan buat frontend SPA menggunakan Inertia React.',
+            'title' => 'Mini Project: Program Manajemen Nilai Mahasiswa',
+            'description' => 'Buat program manajemen nilai mahasiswa dengan struktur data yang sesuai dan tuliskan laporan singkat.',
             'deadline' => Carbon::now()->addDays(2),
-            'submission_url' => 'https://classroom.google.com/c/web-lanjut-bb',
+            'submission_url' => 'https://classroom.google.com/c/pemkom-bb',
             'submission_format' => 'Link GitHub Repository',
             'created_by' => $pjWeb->id,
         ]);
 
         $task3 = Task::create([
-            'subject_id' => $rpl->id,
+            'subject_id' => $matdis->id,
             'target_group' => 'ALL_THEORY',
-            'title' => 'Dokumen SRS (Software Requirements Specification)',
-            'description' => 'Susun dokumen SRS lengkap dengan Use Case Diagram, Activity Diagram, dan Wireframe UI.',
+            'title' => 'Latihan Soal: Logika Matematika & Pembuktian',
+            'description' => 'Kerjakan latihan soal logika matematika, pembuktian induksi, dan relasi pada bab 1-3.',
             'deadline' => Carbon::now()->addDays(5),
-            'submission_url' => 'https://classroom.google.com/c/rpl-bb',
-            'submission_format' => 'Kelompok_SRS_NamaApp.pdf',
+            'submission_url' => 'https://classroom.google.com/c/matdis-bb',
+            'submission_format' => 'Kelompok_Latihan_Nama.pdf',
             'created_by' => $admin->id,
         ]);
 
