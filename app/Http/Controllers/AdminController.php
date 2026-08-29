@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AppSetting;
 use App\Models\ReminderLog;
+use App\Models\Subject;
 use App\Models\User;
 use App\Models\WahaGroupConfig;
 use App\Services\WahaService;
@@ -54,6 +55,7 @@ class AdminController extends Controller
 
         return Inertia::render('Admin/Index', [
             'users' => $users,
+            'subjects' => Subject::withCount(['schedules', 'tasks'])->orderBy('name')->get(),
             'wahaConfigs' => $wahaConfigs,
             'wahaSettings' => $wahaSettings,
             'recentLogs' => $recentLogs,
@@ -110,6 +112,49 @@ class AdminController extends Controller
         }
 
         return redirect()->back()->with('success', 'Konfigurasi WAHA berhasil disimpan.');
+    }
+
+    public function storeSubject(Request $request): RedirectResponse
+    {
+        $this->authorizeAdmin();
+
+        $validated = $request->validate([
+            'code' => ['required', 'string', 'max:20', 'unique:subjects,code'],
+            'name' => ['required', 'string', 'max:100'],
+            'type' => ['required', 'in:THEORY,PRACTICUM'],
+        ]);
+
+        Subject::create($validated);
+
+        return redirect()->back()->with('success', 'Mata pelajaran berhasil ditambahkan.');
+    }
+
+    public function updateSubject(Request $request, Subject $subject): RedirectResponse
+    {
+        $this->authorizeAdmin();
+
+        $validated = $request->validate([
+            'code' => ['required', 'string', 'max:20', 'unique:subjects,code,' . $subject->id],
+            'name' => ['required', 'string', 'max:100'],
+            'type' => ['required', 'in:THEORY,PRACTICUM'],
+        ]);
+
+        $subject->update($validated);
+
+        return redirect()->back()->with('success', 'Mata pelajaran berhasil diperbarui.');
+    }
+
+    public function destroySubject(Subject $subject): RedirectResponse
+    {
+        $this->authorizeAdmin();
+
+        if ($subject->schedules()->exists() || $subject->tasks()->exists()) {
+            return redirect()->back()->with('error', 'Tidak dapat dihapus: masih ada jadwal atau tugas yang memakai mata pelajaran ini.');
+        }
+
+        $subject->delete();
+
+        return redirect()->back()->with('success', 'Mata pelajaran berhasil dihapus.');
     }
 
     private function authorizeAdmin(): void

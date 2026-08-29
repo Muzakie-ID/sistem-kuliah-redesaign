@@ -48,4 +48,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.destroy');
     Route::post('/admin/waha/settings', [AdminController::class, 'updateWahaSettings'])->name('admin.waha.settings');
     Route::post('/admin/waha/test-blast', [AdminController::class, 'testBlast'])->name('admin.waha.test-blast');
+
+    // Mata Pelajaran
+    Route::post('/admin/subjects', [AdminController::class, 'storeSubject'])->name('admin.subjects.store');
+    Route::put('/admin/subjects/{subject}', [AdminController::class, 'updateSubject'])->name('admin.subjects.update');
+    Route::delete('/admin/subjects/{subject}', [AdminController::class, 'destroySubject'])->name('admin.subjects.destroy');
 });

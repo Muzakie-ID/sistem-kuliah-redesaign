@@ -6,18 +6,19 @@ import {
     Users, KeyRound, Send, History, ShieldAlert, 
     CheckCircle2, AlertCircle, RefreshCw, Search,
     Settings, Save, Globe, Key, Layers, DownloadCloud, Bot,
-    UserPlus, Pencil, Trash2, X
+    UserPlus, Pencil, Trash2, X, BookOpen, BookPlus
 } from 'lucide-react';
 
-export default function AdminIndex({ users = [], wahaConfigs = [], wahaSettings = {}, recentLogs = [] }) {
+export default function AdminIndex({ users = [], subjects = [], wahaConfigs = [], wahaSettings = {}, recentLogs = [] }) {
     const [searchQuery, setSearchQuery] = useState('');
-    const [activeSection, setActiveSection] = useState('USERS'); // 'USERS', 'WAHA', 'LOGS'
+    const [activeSection, setActiveSection] = useState('USERS'); // 'USERS', 'SUBJECTS', 'WAHA', 'LOGS'
     const [fetchedGroups, setFetchedGroups] = useState([]);
     const [fetchingGroups, setFetchingGroups] = useState(false);
     const [fetchError, setFetchError] = useState('');
     const [blastResult, setBlastResult] = useState(null);
     const [configSaveSuccess, setConfigSaveSuccess] = useState(false);
     const [userModal, setUserModal] = useState(null); // null | {mode:'create'} | {mode:'edit', user}
+    const [subjectModal, setSubjectModal] = useState(null); // null | {mode:'create'} | {mode:'edit', subject}
 
     // Form Konfigurasi Server WAHA & JID Grup
     const configForm = useForm({
@@ -166,8 +167,9 @@ export default function AdminIndex({ users = [], wahaConfigs = [], wahaSettings 
             </div>
 
             {/* Navigation Section Tabs */}
-            <div className="grid grid-cols-3 gap-1.5 bg-elevated p-1.5 rounded-2xl mb-6 text-xs font-bold" role="tablist" aria-label="Bagian admin">
+            <div className="grid grid-cols-4 gap-1.5 bg-elevated p-1.5 rounded-2xl mb-6 text-xs font-bold" role="tablist" aria-label="Bagian admin">
                 <AdminTab active={activeSection === 'USERS'} onClick={() => setActiveSection('USERS')} icon={<Users className="w-4 h-4" />} label={`Mahasiswa (${users.length})`} />
+                <AdminTab active={activeSection === 'SUBJECTS'} onClick={() => setActiveSection('SUBJECTS')} icon={<BookOpen className="w-4 h-4" />} label={`Mapel (${subjects.length})`} />
                 <AdminTab active={activeSection === 'WAHA'} onClick={() => setActiveSection('WAHA')} icon={<Bot className="w-4 h-4" />} label="WhatsApp Bot" />
                 <AdminTab active={activeSection === 'LOGS'} onClick={() => setActiveSection('LOGS')} icon={<History className="w-4 h-4" />} label="Log Blast" />
             </div>
@@ -272,7 +274,67 @@ export default function AdminIndex({ users = [], wahaConfigs = [], wahaSettings 
                 </section>
             )}
 
-            {/* SECTION 2: WHATSAPP BOT CONFIGURATION & TEST BLAST */}
+            {/* SECTION 2: MANAJEMEN MATA PELAJARAN */}
+            {activeSection === 'SUBJECTS' && (
+                <section className="space-y-3 animate-fade-in-up">
+                    <div className="flex justify-end">
+                        <button
+                            onClick={() => setSubjectModal({ mode: 'create', form: { code: '', name: '', type: 'THEORY' } })}
+                            className="inline-flex items-center gap-1.5 px-4 py-3 rounded-full bg-gradient-to-r from-primary-600 to-primary-500 text-white text-xs font-bold shadow-btn transition-all active:scale-95"
+                        >
+                            <BookPlus className="w-4 h-4" />
+                            Tambah Mapel
+                        </button>
+                    </div>
+
+                    <div className="space-y-2.5">
+                        {subjects.map((s) => (
+                            <article
+                                key={s.id}
+                                className="bg-card rounded-2xl p-4 border border-line shadow-card flex items-center justify-between gap-3 transition-all hover:shadow-card-hover"
+                            >
+                                <div className="flex items-center gap-3 min-w-0">
+                                    <span className={`shrink-0 grid place-items-center w-10 h-10 rounded-2xl font-extrabold text-xs ring-1 ring-line ${
+                                        s.type === 'PRACTICUM' ? 'bg-online-bg text-online' : 'bg-elevated text-ink-soft'
+                                    }`}>
+                                        {s.code}
+                                    </span>
+                                    <div className="min-w-0">
+                                        <h4 className="font-extrabold text-ink text-sm truncate">{s.name}</h4>
+                                        <p className="text-xs text-ink-soft font-medium">
+                                            {s.type === 'PRACTICUM' ? 'Praktikum' : 'Teori'} • {s.schedules_count} jadwal • {s.tasks_count} tugas
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="shrink-0 flex items-center gap-1.5">
+                                    <button
+                                        onClick={() => setSubjectModal({ mode: 'edit', subject: s, form: { code: s.code, name: s.name, type: s.type } })}
+                                        className="grid place-items-center w-9 h-9 rounded-xl bg-elevated hover:bg-primary-50 dark:hover:bg-primary-500/15 text-ink-soft hover:text-primary-600 dark:hover:text-primary-400 border border-line transition-colors active:scale-95"
+                                        title={`Edit ${s.name}`}
+                                        aria-label={`Edit ${s.name}`}
+                                    >
+                                        <Pencil className="w-3.5 h-3.5" />
+                                    </button>
+                                    <button
+                                        onClick={() => { if (confirm(`Hapus mata pelajaran "${s.name}"?`)) router.delete(route('admin.subjects.destroy', s.id), { preserveScroll: true }); }}
+                                        className="grid place-items-center w-9 h-9 rounded-xl bg-elevated hover:bg-rose-50 dark:hover:bg-rose-500/15 text-ink-soft hover:text-cancelled border border-line transition-colors active:scale-95"
+                                        title={`Hapus ${s.name}`}
+                                        aria-label={`Hapus ${s.name}`}
+                                    >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                </div>
+                            </article>
+                        ))}
+                        {subjects.length === 0 && (
+                            <p className="text-center text-xs text-ink-faint py-6">Belum ada mata pelajaran.</p>
+                        )}
+                    </div>
+                </section>
+            )}
+
+            {/* SECTION 3: WHATSAPP BOT CONFIGURATION & TEST BLAST */}
             {activeSection === 'WAHA' && (
                 <section className="space-y-5 animate-fade-in-up">
                     {/* Form Konfigurasi Koneksi WAHA */}
@@ -539,6 +601,20 @@ export default function AdminIndex({ users = [], wahaConfigs = [], wahaSettings 
                     }}
                 />
             )}
+            {subjectModal && (
+                <SubjectModal
+                    modal={subjectModal}
+                    onClose={() => setSubjectModal(null)}
+                    onSubmit={(form) => {
+                        const isEdit = subjectModal.mode === 'edit';
+                        const url = isEdit ? route('admin.subjects.update', subjectModal.subject.id) : route('admin.subjects.store');
+                        router[isEdit ? 'put' : 'post'](url, form, {
+                            preserveScroll: true,
+                            onSuccess: () => setSubjectModal(null),
+                        });
+                    }}
+                />
+            )}
         </AuthenticatedLayout>
     );
 }
@@ -570,6 +646,66 @@ function Field({ label, icon, error, children }) {
             </label>
             {children}
             {error && <p className="text-[11px] text-cancelled mt-1 font-medium" role="alert">{error}</p>}
+        </div>
+    );
+}
+
+function SubjectModal({ modal, onClose, onSubmit }) {
+    const isEdit = modal.mode === 'edit';
+    const [form, setForm] = useState(modal.form);
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fade-in-up" role="dialog" aria-modal="true" aria-label={isEdit ? 'Edit mata pelajaran' : 'Tambah mata pelajaran'}>
+            <div className="absolute inset-0" onClick={onClose} aria-hidden="true"></div>
+            <div className="relative w-full max-w-sm bg-card rounded-3xl border border-line shadow-modal p-5 animate-scale-in">
+                <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-extrabold text-ink text-sm tracking-tight">{isEdit ? 'Edit Mata Pelajaran' : 'Tambah Mata Pelajaran'}</h3>
+                    <button onClick={onClose} className="grid place-items-center w-8 h-8 rounded-xl bg-elevated text-ink-soft hover:text-ink transition-colors" aria-label="Tutup">
+                        <X className="w-4 h-4" />
+                    </button>
+                </div>
+                <form onSubmit={(e) => { e.preventDefault(); onSubmit(form); }} className="space-y-3">
+                    <div>
+                        <label className="block text-xs font-bold text-ink-soft mb-1.5">Kode</label>
+                        <input
+                            type="text"
+                            required
+                            maxLength={20}
+                            value={form.code}
+                            onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })}
+                            className={fieldInputCls}
+                            placeholder="Contoh: PWL"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-bold text-ink-soft mb-1.5">Nama Mata Pelajaran</label>
+                        <input
+                            type="text"
+                            required
+                            maxLength={100}
+                            value={form.name}
+                            onChange={(e) => setForm({ ...form, name: e.target.value })}
+                            className={fieldInputCls}
+                            placeholder="Contoh: Pemrograman Web Lanjut"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-bold text-ink-soft mb-1.5">Jenis</label>
+                        <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className={fieldInputCls}>
+                            <option value="THEORY">Teori</option>
+                            <option value="PRACTICUM">Praktikum</option>
+                        </select>
+                    </div>
+                    <div className="flex gap-2 pt-2">
+                        <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-full bg-elevated text-ink-soft text-xs font-bold border border-line hover:text-ink transition-colors">
+                            Batal
+                        </button>
+                        <button type="submit" className="flex-1 py-2.5 rounded-full bg-gradient-to-r from-primary-600 to-primary-500 text-white text-xs font-bold shadow-btn transition-all active:scale-[0.98]">
+                            {isEdit ? 'Simpan' : 'Tambah'}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 }
