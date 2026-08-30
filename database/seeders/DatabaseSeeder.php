@@ -272,6 +272,96 @@ class DatabaseSeeder extends Seeder
             'lecturer_name' => 'Ir. Yuris Mulya Saputra, S.T., M.Sc., Ph.D.',
         ]);
 
+        // ===== KELAS AA & KLOTER A1 (Data riil) =====
+
+        // Senin: Matematika Diskrit (Teori AA)
+        Schedule::create([
+            'subject_id' => $matdis->id,
+            'target_group' => 'AA_THEORY',
+            'day_of_week' => 1,
+            'start_time' => '09:15:00',
+            'end_time' => '10:55:00',
+            'room' => 'R. KULIAH CU 206',
+            'lecturer_name' => 'Ir. Yuris Mulya Saputra, S.T., M.Sc., Ph.D.',
+        ]);
+
+        // Senin: Praktikum Pemrograman Komputer (A1)
+        Schedule::create([
+            'subject_id' => $prakPemkom->id,
+            'target_group' => 'A1_PRACTICUM',
+            'day_of_week' => 1,
+            'start_time' => '12:15:00',
+            'end_time' => '15:55:00',
+            'room' => 'HS 103 Lab TAJ Layanan Komputasi Awan',
+            'lecturer_name' => 'Ir. Yuris Mulya Saputra, S.T., M.Sc., Ph.D.',
+        ]);
+
+        // Selasa: Praktikum Pendukung Infrastruktur Digital (A1)
+        Schedule::create([
+            'subject_id' => $prakPid->id,
+            'target_group' => 'A1_PRACTICUM',
+            'day_of_week' => 2,
+            'start_time' => '12:15:00',
+            'end_time' => '15:55:00',
+            'room' => 'G. 103 Layanan Instalasi Listrik Lab TTL',
+            'lecturer_name' => 'Ardhi Wicaksono Santoso, S.Kom., M.Cs.',
+        ]);
+
+        // Rabu: Praktikum Teknik Komputer (A1)
+        Schedule::create([
+            'subject_id' => $prakTekkom->id,
+            'target_group' => 'A1_PRACTICUM',
+            'day_of_week' => 3,
+            'start_time' => '07:15:00',
+            'end_time' => '10:55:00',
+            'room' => 'G. 301 Layanan Perangkat Keras Komputer',
+            'lecturer_name' => 'Dr. Sahirul Alam, S.T., M.Eng.',
+        ]);
+
+        // Rabu: Teknik Telekomunikasi (Teori AA)
+        Schedule::create([
+            'subject_id' => $ttele->id,
+            'target_group' => 'AA_THEORY',
+            'day_of_week' => 3,
+            'start_time' => '12:15:00',
+            'end_time' => '13:55:00',
+            'room' => 'R. KULIAH HU 208',
+            'lecturer_name' => 'Ir. Budi Bayu Murti, S.T., M.T.',
+        ]);
+
+        // Kamis: Pemrograman Komputer (Teori AA)
+        Schedule::create([
+            'subject_id' => $pemkom->id,
+            'target_group' => 'AA_THEORY',
+            'day_of_week' => 4,
+            'start_time' => '07:15:00',
+            'end_time' => '08:55:00',
+            'room' => 'R. KULIAH HU 209',
+            'lecturer_name' => 'Ir. Yuris Mulya Saputra, S.T., M.Sc., Ph.D.',
+        ]);
+
+        // Kamis: Basis Data (Teori AA)
+        Schedule::create([
+            'subject_id' => $basisdata->id,
+            'target_group' => 'AA_THEORY',
+            'day_of_week' => 4,
+            'start_time' => '09:15:00',
+            'end_time' => '10:55:00',
+            'room' => 'R. KULIAH HU 208',
+            'lecturer_name' => 'Ir. Unan Yusmaniar Oktiawati, S.T., M.Sc., Ph.D.',
+        ]);
+
+        // Kamis: Komunikasi Data (Teori AA)
+        Schedule::create([
+            'subject_id' => $kodata->id,
+            'target_group' => 'AA_THEORY',
+            'day_of_week' => 4,
+            'start_time' => '12:15:00',
+            'end_time' => '13:55:00',
+            'room' => 'R. KULIAH CU 204',
+            'lecturer_name' => 'Dr. Ir. Ronald Adrian, S.T., M.Eng., IPM.',
+        ]);
+
         // 6. SCHEDULE OVERRIDE CONTOH (Kelas Praktikum Teknik Komputer dialihkan Zoom untuk hari ini)
         $today = Carbon::today();
         ScheduleOverride::create([
