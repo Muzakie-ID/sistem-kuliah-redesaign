@@ -235,7 +235,7 @@ class DatabaseSeeder extends Seeder
             'day_of_week' => 3,
             'start_time' => '09:15:00',
             'end_time' => '10:55:00',
-            'room' => 'R. KULIAH HU 208',
+            'room' => 'R. KULIAH CM 201 (atau HU 208)',
             'lecturer_name' => 'Ardhi Wicaksono Santoso, S.Kom., M.Cs.',
         ]);
 
@@ -270,6 +270,41 @@ class DatabaseSeeder extends Seeder
             'end_time' => '10:55:00',
             'room' => 'R. KULIAH CU 204',
             'lecturer_name' => 'Ir. Yuris Mulya Saputra, S.T., M.Sc., Ph.D.',
+        ]);
+
+        // ===== KLOTER B1 (Data riil) =====
+
+        // Senin: Praktikum Pendukung Infrastruktur Digital (B1)
+        Schedule::create([
+            'subject_id' => $prakPid->id,
+            'target_group' => 'B1_PRACTICUM',
+            'day_of_week' => 1,
+            'start_time' => '07:15:00',
+            'end_time' => '10:55:00',
+            'room' => 'G. 103 Layanan Instalasi Listrik Lab TTL',
+            'lecturer_name' => 'Achmad Solaeman, S.Tr.T., M.Eng.',
+        ]);
+
+        // Selasa: Praktikum Teknik Komputer (B1)
+        Schedule::create([
+            'subject_id' => $prakTekkom->id,
+            'target_group' => 'B1_PRACTICUM',
+            'day_of_week' => 2,
+            'start_time' => '12:15:00',
+            'end_time' => '15:55:00',
+            'room' => 'G. 302 Layanan Bengkel Listrik Lab Elektronika',
+            'lecturer_name' => 'Dr. Sahirul Alam, S.T., M.Eng.',
+        ]);
+
+        // Rabu: Praktikum Pemrograman Komputer (B1)
+        Schedule::create([
+            'subject_id' => $prakPemkom->id,
+            'target_group' => 'B1_PRACTICUM',
+            'day_of_week' => 3,
+            'start_time' => '12:15:00',
+            'end_time' => '15:55:00',
+            'room' => 'HS 103 Lab TAJ Layanan Komputasi Awan',
+            'lecturer_name' => 'Dr. Ir. Ronald Adrian, S.T., M.Eng., IPM.',
         ]);
 
         // ===== KELAS AA & KLOTER A1 (Data riil) =====
