@@ -89,9 +89,9 @@ export default function TasksIndex({ pendingTasks = [], completedTasks = [], man
                                         {task.is_completed ? '✓ Selesai' : task.deadline_human}
                                     </Badge>
                                     <Badge variant="default">{task.subject_name}</Badge>
-                                    {task.target_group !== 'ALL_THEORY' && (
-                                        <Badge variant="practicum">{task.target_group.replace('_PRACTICUM', '')}</Badge>
-                                    )}
+                                    <Badge variant={task.target_group.endsWith('_THEORY') ? 'theory' : 'practicum'}>
+                                        {task.target_group.replace(/_(THEORY|PRACTICUM)$/, '')}
+                                    </Badge>
                                 </div>
 
                                 {task.urgency === 'urgent' && !task.is_completed && (

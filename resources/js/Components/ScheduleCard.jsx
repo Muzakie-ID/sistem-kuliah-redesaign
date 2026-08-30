@@ -42,7 +42,7 @@ export default function ScheduleCard({ schedule, onManage, manageLabel = 'Edit S
                     {isCancelled && <Badge variant="cancelled"><CalendarX2 className="w-3 h-3 mr-1" /> DIBATALKAN</Badge>}
                     {!isOnline && !isRescheduled && !isCancelled && (
                         <Badge variant={schedule.type === 'THEORY' ? 'theory' : 'practicum'}>
-                            {schedule.type === 'THEORY' ? 'Teori BB' : `Praktikum ${schedule.target_group.replace('_PRACTICUM', '')}`}
+                            {schedule.type === 'THEORY' ? `Teori ${schedule.target_group.replace('_THEORY', '')}` : `Praktikum ${schedule.target_group.replace('_PRACTICUM', '')}`}
                         </Badge>
                     )}
                 </div>

@@ -43,7 +43,7 @@ export default function SchedulesIndex({ weeklySchedules = {}, makeupSchedules =
             <div className="mb-4">
                 <h2 className="text-xl font-extrabold text-ink tracking-tight">Matriks Jadwal Mingguan</h2>
                 <p className="text-xs text-ink-soft mt-0.5">
-                    Jadwal kuliah Teori (BB) dan Praktikum Kloter <span className="font-bold text-primary-600 dark:text-primary-400">{user?.practicum_group}</span>
+                    Jadwal kuliah Teori Kelas <span className="font-bold text-primary-600 dark:text-primary-400">{user?.theory_class}</span> dan Praktikum Kloter <span className="font-bold text-primary-600 dark:text-primary-400">{user?.practicum_group}</span>
                 </p>
             </div>
 

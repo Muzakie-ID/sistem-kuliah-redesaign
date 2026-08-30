@@ -45,6 +45,7 @@ class HandleInertiaRequests extends Middleware
                     'name' => $user->name,
                     'niu' => $user->niu,
                     'role' => $user->role,
+                    'theory_class' => $user->theory_class,
                     'practicum_group' => $user->practicum_group,
                     'is_admin' => $user->isAdmin(),
                     'is_pj' => $user->isPj(),

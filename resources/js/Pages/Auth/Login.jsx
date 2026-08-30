@@ -102,7 +102,7 @@ export default function Login() {
                     Portal Kelas <span className="text-primary-600 dark:text-primary-400">&amp; Praktikum</span> TRI
                 </h1>
                 <p className="mt-2 text-sm text-ink-soft max-w-xs mx-auto">
-                    Pantau Jadwal Kuliah Teori BB, Pecahan Kloter Lab B1/B2 &amp; Tugas
+                    Pantau Jadwal Kuliah Teori BB/AA, Pecahan Kloter Lab B1/B2 &amp; A1/A2 &amp; Tugas
                 </p>
             </div>
 
@@ -163,7 +163,7 @@ export default function Login() {
                                 <div>
                                     <p className="text-sm font-bold text-ink leading-tight">Halo, {detectedUser?.name}!</p>
                                     <p className="text-xs text-primary-700 dark:text-primary-300 font-semibold">
-                                        Kelas BB • Kloter Praktikum {detectedUser?.practicum_group}
+                                        Kelas {detectedUser?.theory_class} • Kloter Praktikum {detectedUser?.practicum_group}
                                     </p>
                                 </div>
                             </div>

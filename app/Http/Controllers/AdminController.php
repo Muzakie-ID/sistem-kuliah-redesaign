@@ -201,7 +201,7 @@ class AdminController extends Controller
         }
 
         $validated = $request->validate([
-            'target_group' => ['required', 'in:ALL_THEORY,B1_PRACTICUM,B2_PRACTICUM'],
+            'target_group' => ['required', 'in:BB_THEORY,AA_THEORY,B1_PRACTICUM,B2_PRACTICUM,A1_PRACTICUM,A2_PRACTICUM'],
             'message' => ['nullable', 'string', 'max:500'],
         ]);
 
@@ -227,7 +227,8 @@ class AdminController extends Controller
             'niu' => ['required', 'string', 'max:30', 'unique:users,niu'],
             'name' => ['required', 'string', 'max:100'],
             'role' => ['required', 'in:STUDENT,PJ,ADMIN'],
-            'practicum_group' => ['required', 'in:B1,B2'],
+            'practicum_group' => ['required', 'in:B1,B2,A1,A2'],
+            'theory_class' => ['required', 'in:BB,AA'],
         ]);
 
         User::create($validated);
@@ -243,7 +244,8 @@ class AdminController extends Controller
             'niu' => ['required', 'string', 'max:30', 'unique:users,niu,'.$user->id],
             'name' => ['required', 'string', 'max:100'],
             'role' => ['required', 'in:STUDENT,PJ,ADMIN'],
-            'practicum_group' => ['required', 'in:B1,B2'],
+            'practicum_group' => ['required', 'in:B1,B2,A1,A2'],
+            'theory_class' => ['required', 'in:BB,AA'],
         ]);
 
         $user->update($validated);

@@ -35,7 +35,7 @@ class ScheduleTest extends TestCase
 
         Schedule::create([
             'subject_id' => $subject->id,
-            'target_group' => 'ALL_THEORY',
+            'target_group' => 'BB_THEORY',
             'day_of_week' => $todayIso,
             'start_time' => '08:00:00',
             'end_time' => '09:40:00',
@@ -72,7 +72,7 @@ class ScheduleTest extends TestCase
 
         $schedule = Schedule::create([
             'subject_id' => $subject->id,
-            'target_group' => 'ALL_THEORY',
+            'target_group' => 'BB_THEORY',
             'day_of_week' => 1,
             'start_time' => '08:00:00',
             'end_time' => '09:40:00',
@@ -118,7 +118,7 @@ class ScheduleTest extends TestCase
 
         $schedule = Schedule::create([
             'subject_id' => $subject->id,
-            'target_group' => 'ALL_THEORY',
+            'target_group' => 'BB_THEORY',
             'day_of_week' => 1,
             'start_time' => '08:00:00',
             'end_time' => '09:40:00',

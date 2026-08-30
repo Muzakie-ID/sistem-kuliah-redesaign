@@ -64,7 +64,7 @@ export default function AuthenticatedLayout({ children }) {
                             <p className="text-[11px] text-ink-soft flex items-center gap-1.5 truncate">
                                 <span>{user?.niu}</span>
                                 <span className="w-0.5 h-0.5 rounded-full bg-ink-faint"></span>
-                                <span className="font-bold text-primary-600 dark:text-primary-400">Kloter {user?.practicum_group}</span>
+                                <span className="font-bold text-primary-600 dark:text-primary-400">Kelas {user?.theory_class} • Kloter {user?.practicum_group}</span>
                             </p>
                         </div>
                     </div>

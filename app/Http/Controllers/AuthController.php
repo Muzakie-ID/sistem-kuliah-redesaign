@@ -47,6 +47,7 @@ class AuthController extends Controller
                     'name' => $user->name,
                     'niu' => $user->niu,
                     'role' => $user->role,
+                    'theory_class' => $user->theory_class,
                     'practicum_group' => $user->practicum_group,
                 ],
             ]);
@@ -59,6 +60,7 @@ class AuthController extends Controller
                 'name' => $user->name,
                 'niu' => $user->niu,
                 'role' => $user->role,
+                'theory_class' => $user->theory_class,
                 'practicum_group' => $user->practicum_group,
             ],
         ]);

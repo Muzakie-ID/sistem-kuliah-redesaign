@@ -23,9 +23,14 @@ class DatabaseSeeder extends Seeder
     {
         // 1. WAHA GROUPS
         WahaGroupConfig::create([
-            'target_group' => 'ALL_THEORY',
+            'target_group' => 'BB_THEORY',
             'group_jid' => '120363234567890123@g.us',
             'group_name' => 'Kelas BB - Teori TRI 2024',
+        ]);
+        WahaGroupConfig::create([
+            'target_group' => 'AA_THEORY',
+            'group_jid' => '120363234567890126@g.us', // ponytail: placeholder, isi JID asli via halaman Admin
+            'group_name' => 'Kelas AA - Teori TRI 2024',
         ]);
         WahaGroupConfig::create([
             'target_group' => 'B1_PRACTICUM',
@@ -36,6 +41,16 @@ class DatabaseSeeder extends Seeder
             'target_group' => 'B2_PRACTICUM',
             'group_jid' => '120363234567890125@g.us',
             'group_name' => 'Praktikum Kloter B2 TRI 2024',
+        ]);
+        WahaGroupConfig::create([
+            'target_group' => 'A1_PRACTICUM',
+            'group_jid' => '120363234567890127@g.us', // ponytail: placeholder, isi JID asli via halaman Admin
+            'group_name' => 'Praktikum Kloter A1 TRI 2024',
+        ]);
+        WahaGroupConfig::create([
+            'target_group' => 'A2_PRACTICUM',
+            'group_jid' => '120363234567890128@g.us', // ponytail: placeholder, isi JID asli via halaman Admin
+            'group_name' => 'Praktikum Kloter A2 TRI 2024',
         ]);
 
         // 2. USERS
@@ -95,7 +110,19 @@ class DatabaseSeeder extends Seeder
             'name' => 'Rizky Ramadhan',
             'pin_hash' => Hash::make('123456'),
             'role' => 'STUDENT',
+            'theory_class' => 'BB',
             'practicum_group' => 'B2',
+            'is_active' => true,
+        ]);
+
+        // Mahasiswa Aktif Kelas AA / Kloter A1 (contoh kelas baru)
+        User::create([
+            'niu' => '53414',
+            'name' => 'Andi Pratama',
+            'pin_hash' => Hash::make('123456'),
+            'role' => 'STUDENT',
+            'theory_class' => 'AA',
+            'practicum_group' => 'A1',
             'is_active' => true,
         ]);
 
@@ -171,7 +198,7 @@ class DatabaseSeeder extends Seeder
         // Selasa: Teknik Telekomunikasi (Teori BB)
         $schTtele = Schedule::create([
             'subject_id' => $ttele->id,
-            'target_group' => 'ALL_THEORY',
+            'target_group' => 'BB_THEORY',
             'day_of_week' => 2,
             'start_time' => '07:15:00',
             'end_time' => '08:55:00',
@@ -193,7 +220,7 @@ class DatabaseSeeder extends Seeder
         // Rabu: Basis Data (Teori BB)
         $schBasisData = Schedule::create([
             'subject_id' => $basisdata->id,
-            'target_group' => 'ALL_THEORY',
+            'target_group' => 'BB_THEORY',
             'day_of_week' => 3,
             'start_time' => '07:15:00',
             'end_time' => '08:55:00',
@@ -204,7 +231,7 @@ class DatabaseSeeder extends Seeder
         // Rabu: Komunikasi Data (Teori BB)
         $schKodata = Schedule::create([
             'subject_id' => $kodata->id,
-            'target_group' => 'ALL_THEORY',
+            'target_group' => 'BB_THEORY',
             'day_of_week' => 3,
             'start_time' => '09:15:00',
             'end_time' => '10:55:00',
@@ -226,7 +253,7 @@ class DatabaseSeeder extends Seeder
         // Kamis: Pemrograman Komputer (Teori BB)
         $schPemkom = Schedule::create([
             'subject_id' => $pemkom->id,
-            'target_group' => 'ALL_THEORY',
+            'target_group' => 'BB_THEORY',
             'day_of_week' => 4,
             'start_time' => '07:15:00',
             'end_time' => '08:55:00',
@@ -237,7 +264,7 @@ class DatabaseSeeder extends Seeder
         // Kamis: Matematika Diskrit (Teori BB)
         $schMatdis = Schedule::create([
             'subject_id' => $matdis->id,
-            'target_group' => 'ALL_THEORY',
+            'target_group' => 'BB_THEORY',
             'day_of_week' => 4,
             'start_time' => '09:15:00',
             'end_time' => '10:55:00',

@@ -18,8 +18,7 @@ class ScheduleController extends Controller
     public function index(Request $request): Response
     {
         $user = Auth::user();
-        $practicumTarget = $user->practicum_group === 'B2' ? 'B2_PRACTICUM' : 'B1_PRACTICUM';
-        $allowedTargets = ['ALL_THEORY', $practicumTarget];
+        $allowedTargets = $user->allowedTargets();
 
         $startOfWeek = Carbon::now()->startOfWeek();
         $endOfWeek = Carbon::now()->endOfWeek();
@@ -265,7 +264,7 @@ class ScheduleController extends Controller
     {
         return $request->validate([
             'subject_id' => ['required', 'exists:subjects,id'],
-            'target_group' => ['required', 'in:ALL_THEORY,B1_PRACTICUM,B2_PRACTICUM'],
+            'target_group' => ['required', 'in:BB_THEORY,AA_THEORY,B1_PRACTICUM,B2_PRACTICUM,A1_PRACTICUM,A2_PRACTICUM'],
             'day_of_week' => ['required', 'integer', 'min:1', 'max:7'],
             'start_time' => ['required', 'date_format:H:i'],
             'end_time' => ['required', 'date_format:H:i', 'after:start_time'],

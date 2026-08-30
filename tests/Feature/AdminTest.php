@@ -24,7 +24,7 @@ class AdminTest extends TestCase
         ]);
 
         WahaGroupConfig::create([
-            'target_group' => 'ALL_THEORY',
+            'target_group' => 'BB_THEORY',
             'group_name' => 'Kelas BB (Teori)',
             'group_jid' => '120363001@g.us',
         ]);
@@ -45,7 +45,7 @@ class AdminTest extends TestCase
         ]);
 
         $cfg = WahaGroupConfig::create([
-            'target_group' => 'ALL_THEORY',
+            'target_group' => 'BB_THEORY',
             'group_name' => 'Kelas BB (Teori)',
             'group_jid' => '120363001@g.us',
         ]);

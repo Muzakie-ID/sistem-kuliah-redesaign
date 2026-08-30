@@ -7,7 +7,7 @@ export default function CreateTaskModal({ isOpen, onClose, subjects = [] }) {
 
     const { data, setData, post, processing, errors, reset } = useForm({
         subject_id: subjects.length > 0 ? subjects[0].id : '',
-        target_group: 'ALL_THEORY',
+        target_group: 'BB_THEORY',
         title: '',
         description: '',
         deadline: '',
@@ -66,9 +66,12 @@ export default function CreateTaskModal({ isOpen, onClose, subjects = [] }) {
                     {/* Target Mahasiswa */}
                     <Field label="Target Mahasiswa" required error={errors.target_group}>
                         <select value={data.target_group} onChange={(e) => setData('target_group', e.target.value)} className={inputCls}>
-                            <option value="ALL_THEORY">Semua Mahasiswa (Kelas Teori BB)</option>
-                            <option value="B1_PRACTICUM">Hanya Kloter B1 (Praktikum)</option>
-                            <option value="B2_PRACTICUM">Hanya Kloter B2 (Praktikum)</option>
+                            <option value="BB_THEORY">Kelas Teori BB</option>
+                            <option value="AA_THEORY">Kelas Teori AA</option>
+                            <option value="B1_PRACTICUM">Kloter B1 (Praktikum)</option>
+                            <option value="B2_PRACTICUM">Kloter B2 (Praktikum)</option>
+                            <option value="A1_PRACTICUM">Kloter A1 (Praktikum)</option>
+                            <option value="A2_PRACTICUM">Kloter A2 (Praktikum)</option>
                         </select>
                     </Field>
 

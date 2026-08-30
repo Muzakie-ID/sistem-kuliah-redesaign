@@ -56,7 +56,7 @@ class TaskTest extends TestCase
 
         $task = Task::create([
             'subject_id' => $subject->id,
-            'target_group' => 'ALL_THEORY',
+            'target_group' => 'BB_THEORY',
             'title' => 'Tugas 1',
             'deadline' => now()->addDays(2),
         ]);

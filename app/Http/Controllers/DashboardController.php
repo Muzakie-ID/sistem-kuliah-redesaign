@@ -20,8 +20,7 @@ class DashboardController extends Controller
         $today = Carbon::today();
         $dayOfWeek = $today->dayOfWeekIso; // 1 (Mon) to 7 (Sun)
 
-        $practicumTarget = $user->practicum_group === 'B2' ? 'B2_PRACTICUM' : 'B1_PRACTICUM';
-        $allowedTargets = ['ALL_THEORY', $practicumTarget];
+        $allowedTargets = $user->allowedTargets();
 
         // 1. Ambil Jadwal Master untuk Hari Ini
         $masterSchedules = Schedule::with(['subject'])

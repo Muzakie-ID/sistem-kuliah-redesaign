@@ -37,7 +37,7 @@ export default function AdminIndex({ users = [], subjects = [], wahaConfigs = []
 
     // Form Test Blast
     const testBlastForm = useForm({
-        target_group: 'ALL_THEORY',
+        target_group: 'BB_THEORY',
         message: '',
     });
 
@@ -194,7 +194,7 @@ export default function AdminIndex({ users = [], subjects = [], wahaConfigs = []
                             />
                         </div>
                         <button
-                            onClick={() => setUserModal({ mode: 'create', form: { niu: '', name: '', role: 'STUDENT', practicum_group: 'B1' } })}
+                            onClick={() => setUserModal({ mode: 'create', form: { niu: '', name: '', role: 'STUDENT', theory_class: 'BB', practicum_group: 'B1' } })}
                             className="shrink-0 inline-flex items-center gap-1.5 px-4 py-3 rounded-full bg-gradient-to-r from-primary-600 to-primary-500 text-white text-xs font-bold shadow-btn transition-all active:scale-95"
                         >
                             <UserPlus className="w-4 h-4" />
@@ -240,7 +240,7 @@ export default function AdminIndex({ users = [], subjects = [], wahaConfigs = []
 
                                 <div className="shrink-0 flex items-center gap-1.5">
                                     <button
-                                        onClick={() => setUserModal({ mode: 'edit', user: u, form: { niu: u.niu, name: u.name, role: u.role, practicum_group: u.practicum_group } })}
+                                        onClick={() => setUserModal({ mode: 'edit', user: u, form: { niu: u.niu, name: u.name, role: u.role, theory_class: u.theory_class, practicum_group: u.practicum_group } })}
                                         className="grid place-items-center w-9 h-9 rounded-xl bg-elevated hover:bg-primary-50 dark:hover:bg-primary-500/15 text-ink-soft hover:text-primary-600 dark:hover:text-primary-400 border border-line transition-colors active:scale-95"
                                         title={`Edit data ${u.name}`}
                                         aria-label={`Edit ${u.name}`}
@@ -435,9 +435,12 @@ export default function AdminIndex({ users = [], subjects = [], wahaConfigs = []
                                                         <p className="text-[10px] font-mono text-ink-faint truncate">{g.id}</p>
                                                     </div>
                                                     <div className="flex items-center gap-1 shrink-0">
-                                                        <button type="button" onClick={() => assignFetchedJid('ALL_THEORY', g.id)} className="assign-btn text-primary-700 dark:text-primary-300 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/15 dark:hover:bg-primary-500/25">Teori BB</button>
+                                                        <button type="button" onClick={() => assignFetchedJid('BB_THEORY', g.id)} className="assign-btn text-primary-700 dark:text-primary-300 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/15 dark:hover:bg-primary-500/25">Teori BB</button>
+                                                        <button type="button" onClick={() => assignFetchedJid('AA_THEORY', g.id)} className="assign-btn text-indigo-700 dark:text-indigo-300 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-500/15 dark:hover:bg-indigo-500/25">Teori AA</button>
                                                         <button type="button" onClick={() => assignFetchedJid('B1_PRACTICUM', g.id)} className="assign-btn text-emerald-700 dark:text-emerald-300 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:hover:bg-emerald-500/25">Lab B1</button>
                                                         <button type="button" onClick={() => assignFetchedJid('B2_PRACTICUM', g.id)} className="assign-btn text-purple-700 dark:text-purple-300 bg-purple-50 hover:bg-purple-100 dark:bg-purple-500/15 dark:hover:bg-purple-500/25">Lab B2</button>
+                                                        <button type="button" onClick={() => assignFetchedJid('A1_PRACTICUM', g.id)} className="assign-btn text-teal-700 dark:text-teal-300 bg-teal-50 hover:bg-teal-100 dark:bg-teal-500/15 dark:hover:bg-teal-500/25">Lab A1</button>
+                                                        <button type="button" onClick={() => assignFetchedJid('A2_PRACTICUM', g.id)} className="assign-btn text-orange-700 dark:text-orange-300 bg-orange-50 hover:bg-orange-100 dark:bg-orange-500/15 dark:hover:bg-orange-500/25">Lab A2</button>
                                                     </div>
                                                 </div>
                                             ))}
@@ -514,9 +517,12 @@ export default function AdminIndex({ users = [], subjects = [], wahaConfigs = []
                                     }}
                                     className={fieldInputCls}
                                 >
-                                    <option value="ALL_THEORY">Grup Kelas BB (Teori)</option>
+                                    <option value="BB_THEORY">Grup Kelas BB (Teori)</option>
+                                    <option value="AA_THEORY">Grup Kelas AA (Teori)</option>
                                     <option value="B1_PRACTICUM">Grup Praktikum B1</option>
                                     <option value="B2_PRACTICUM">Grup Praktikum B2</option>
+                                    <option value="A1_PRACTICUM">Grup Praktikum A1</option>
+                                    <option value="A2_PRACTICUM">Grup Praktikum A2</option>
                                 </select>
                             </Field>
 
@@ -781,10 +787,19 @@ function UserModal({ modal, onClose, onSubmit }) {
                             </select>
                         </div>
                         <div>
+                            <label className="block text-xs font-bold text-ink-soft mb-1.5">Kelas Teori</label>
+                            <select value={form.theory_class} onChange={(e) => setForm({ ...form, theory_class: e.target.value })} className={fieldInputCls}>
+                                <option value="BB">BB</option>
+                                <option value="AA">AA</option>
+                            </select>
+                        </div>
+                        <div>
                             <label className="block text-xs font-bold text-ink-soft mb-1.5">Kloter</label>
                             <select value={form.practicum_group} onChange={(e) => setForm({ ...form, practicum_group: e.target.value })} className={fieldInputCls}>
                                 <option value="B1">B1</option>
                                 <option value="B2">B2</option>
+                                <option value="A1">A1</option>
+                                <option value="A2">A2</option>
                             </select>
                         </div>
                     </div>

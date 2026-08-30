@@ -12,9 +12,12 @@ const DAYS = [
 ];
 
 const TARGETS = [
-    { value: 'ALL_THEORY', label: 'Teori (Semua Kelas)' },
+    { value: 'BB_THEORY', label: 'Teori BB' },
+    { value: 'AA_THEORY', label: 'Teori AA' },
     { value: 'B1_PRACTICUM', label: 'Praktikum B1' },
     { value: 'B2_PRACTICUM', label: 'Praktikum B2' },
+    { value: 'A1_PRACTICUM', label: 'Praktikum A1' },
+    { value: 'A2_PRACTICUM', label: 'Praktikum A2' },
 ];
 
 export default function ScheduleFormModal({ isOpen, onClose, subjects = [], schedule = null }) {
@@ -24,7 +27,7 @@ export default function ScheduleFormModal({ isOpen, onClose, subjects = [], sche
 
     const { data, setData, post, put, processing, errors } = useForm({
         subject_id: schedule?.subject_id ?? (subjects[0]?.id ?? ''),
-        target_group: schedule?.target_group ?? 'ALL_THEORY',
+        target_group: schedule?.target_group ?? 'BB_THEORY',
         day_of_week: schedule?.day_of_week ?? 1,
         start_time: schedule?.start_time ?? '',
         end_time: schedule?.end_time ?? '',

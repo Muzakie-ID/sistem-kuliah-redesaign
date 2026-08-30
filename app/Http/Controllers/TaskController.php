@@ -18,8 +18,7 @@ class TaskController extends Controller
     public function index(Request $request): Response
     {
         $user = Auth::user();
-        $practicumTarget = $user->practicum_group === 'B2' ? 'B2_PRACTICUM' : 'B1_PRACTICUM';
-        $allowedTargets = ['ALL_THEORY', $practicumTarget];
+        $allowedTargets = $user->allowedTargets();
 
         $tasks = Task::with(['subject', 'completions' => function ($q) use ($user) {
             $q->where('user_id', $user->id);
@@ -81,7 +80,7 @@ class TaskController extends Controller
 
         $validated = $request->validate([
             'subject_id' => ['required', 'exists:subjects,id'],
-            'target_group' => ['required', 'in:ALL_THEORY,B1_PRACTICUM,B2_PRACTICUM'],
+            'target_group' => ['required', 'in:BB_THEORY,AA_THEORY,B1_PRACTICUM,B2_PRACTICUM,A1_PRACTICUM,A2_PRACTICUM'],
             'title' => ['required', 'string', 'max:150'],
             'description' => ['nullable', 'string', 'max:2000'],
             'deadline' => ['required', 'date'],

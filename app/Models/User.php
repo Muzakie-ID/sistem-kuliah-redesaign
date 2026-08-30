@@ -19,6 +19,7 @@ class User extends Authenticatable
         'name',
         'pin_hash',
         'role',
+        'theory_class',
         'practicum_group',
         'is_active',
     ];
@@ -58,6 +59,30 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->role === 'ADMIN';
+    }
+
+    /**
+     * Target group WAHA untuk kelas teori milik user ini (BB_THEORY / AA_THEORY).
+     */
+    public function theoryTarget(): string
+    {
+        return $this->theory_class.'_THEORY';
+    }
+
+    /**
+     * Target group WAHA untuk kloter praktikum milik user ini (B1_PRACTICUM / A2_PRACTICUM / ...).
+     */
+    public function practicumTarget(): string
+    {
+        return $this->practicum_group.'_PRACTICUM';
+    }
+
+    /**
+     * Semua target group jadwal/tugas yang boleh dilihat user ini.
+     */
+    public function allowedTargets(): array
+    {
+        return [$this->theoryTarget(), $this->practicumTarget()];
     }
 
     public function isPj(): bool
