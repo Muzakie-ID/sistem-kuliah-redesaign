@@ -353,6 +353,41 @@ class DatabaseSeeder extends Seeder
             'lecturer_name' => 'Dr. Sahirul Alam, S.T., M.Eng.',
         ]);
 
+        // ===== KLOTER A2 (Data riil) =====
+
+        // Senin: Praktikum Teknik Komputer (A2)
+        Schedule::create([
+            'subject_id' => $prakTekkom->id,
+            'target_group' => 'A2_PRACTICUM',
+            'day_of_week' => 1,
+            'start_time' => '12:15:00',
+            'end_time' => '15:55:00',
+            'room' => 'G. 301 Layanan Perangkat Keras Komputer',
+            'lecturer_name' => 'Dr. Sahirul Alam, S.T., M.Eng.',
+        ]);
+
+        // Selasa: Praktikum Pendukung Infrastruktur Digital (A2)
+        Schedule::create([
+            'subject_id' => $prakPid->id,
+            'target_group' => 'A2_PRACTICUM',
+            'day_of_week' => 2,
+            'start_time' => '07:15:00',
+            'end_time' => '10:55:00',
+            'room' => 'G. 103 Layanan Instalasi Listrik Lab TTL',
+            'lecturer_name' => 'Ardhi Wicaksono Santoso, S.Kom., M.Cs.',
+        ]);
+
+        // Rabu: Praktikum Pemrograman Komputer (A2)
+        Schedule::create([
+            'subject_id' => $prakPemkom->id,
+            'target_group' => 'A2_PRACTICUM',
+            'day_of_week' => 3,
+            'start_time' => '07:15:00',
+            'end_time' => '10:55:00',
+            'room' => 'HS 103 Lab TAJ Layanan Komputasi Awan',
+            'lecturer_name' => 'Ir. Yuris Mulya Saputra, S.T., M.Sc., Ph.D.',
+        ]);
+
         // Rabu: Teknik Telekomunikasi (Teori AA)
         Schedule::create([
             'subject_id' => $ttele->id,
