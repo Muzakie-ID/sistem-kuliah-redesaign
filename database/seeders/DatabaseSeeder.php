@@ -54,75 +54,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 2. USERS
-        // Admin / Komti
+        // Admin / Komti (satu-satunya user bawaan; PJ & mahasiswa daftar via halaman Register / input Admin)
         $admin = User::create([
             'niu' => '00001',
             'name' => 'Komti Triyono (Super Admin)',
             'pin_hash' => Hash::make('123456'),
             'role' => 'ADMIN',
             'practicum_group' => 'B1',
-            'is_active' => true,
-        ]);
-
-        // PJ Mata Kuliah (Web Lanjut)
-        $pjWeb = User::create([
-            'niu' => '11111',
-            'name' => 'Ahmad Fauzi (PJ Web)',
-            'pin_hash' => Hash::make('123456'),
-            'role' => 'PJ',
-            'practicum_group' => 'B1',
-            'is_active' => true,
-        ]);
-
-        // PJ Mata Kuliah (Jaringan Komputer)
-        $pjJarkom = User::create([
-            'niu' => '22222',
-            'name' => 'Siti Nurhaliza (PJ Jarkom)',
-            'pin_hash' => Hash::make('123456'),
-            'role' => 'PJ',
-            'practicum_group' => 'B2',
-            'is_active' => true,
-        ]);
-
-        // Mahasiswa Aktif Kloter B1
-        $studentB1 = User::create([
-            'niu' => '53411',
-            'name' => 'Muhammad Adib Muzakki',
-            'pin_hash' => Hash::make('123456'),
-            'role' => 'STUDENT',
-            'practicum_group' => 'B1',
-            'is_active' => true,
-        ]);
-
-        // Mahasiswa Belum Aktivasi Kloter B2 (Testing Aktivasi PIN Baru)
-        $studentB2New = User::create([
-            'niu' => '53412',
-            'name' => 'Fajar Pratama (Belum Aktivasi)',
-            'pin_hash' => null,
-            'role' => 'STUDENT',
-            'practicum_group' => 'B2',
-            'is_active' => false,
-        ]);
-
-        // Mahasiswa Aktif Kloter B2
-        $studentB2 = User::create([
-            'niu' => '53413',
-            'name' => 'Rizky Ramadhan',
-            'pin_hash' => Hash::make('123456'),
-            'role' => 'STUDENT',
-            'theory_class' => 'BB',
-            'practicum_group' => 'B2',
-            'is_active' => true,
-        ]);
-
-        // Mahasiswa Aktif Kelas AA / Kloter A1 (contoh kelas baru)
-        User::create([
-            'niu' => '53414',
-            'name' => 'Andi Pratama',
-            'pin_hash' => Hash::make('123456'),
-            'role' => 'STUDENT',
-            'theory_class' => 'AA',
-            'practicum_group' => 'A1',
             'is_active' => true,
         ]);
 
@@ -180,8 +118,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 4. COURSE PJS
-        CoursePj::create(['user_id' => $pjWeb->id, 'subject_id' => $pemkom->id]);
-        CoursePj::create(['user_id' => $pjJarkom->id, 'subject_id' => $prakTekkom->id]);
+        // ponytail: dikosongkan — PJ ditambahkan via Admin setelah akun PJ dibuat
 
         // 5. MASTER SCHEDULES (Data riil kelas BB & B2)
         // Senin: Praktikum Pendukung Infrastruktur Digital (B2)
@@ -442,7 +379,7 @@ class DatabaseSeeder extends Seeder
             'meeting_passcode' => '123456',
             'reason' => 'Dosen bertugas ke luar kota, kuliah dialihkan secara daring via Zoom Meeting. Wajib on-cam.',
             'is_notified' => true,
-            'created_by' => $pjWeb->id,
+            'created_by' => $admin->id,
         ]);
 
         // 7. TASKS — dikosongkan (tugas diinput manual via aplikasi)
