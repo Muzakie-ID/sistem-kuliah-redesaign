@@ -269,6 +269,8 @@ export default function Login() {
 
                 <p className="mt-5 text-center text-[11px] text-ink-faint">
                     Lupa PIN? Hubungi Komti Kelas Anda.
+                    <span className="mx-1.5">•</span>
+                    <a href="/register" className="font-bold text-primary-600 dark:text-primary-400 hover:underline">Daftar akun baru</a>
                 </p>
             </div>
         </div>

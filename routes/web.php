@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\TaskController;
@@ -18,6 +19,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/auth/check-niu', [AuthController::class, 'checkNiu'])->name('auth.check-niu');
     Route::post('/auth/activate', [AuthController::class, 'activatePin'])->name('auth.activate');
     Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
+    Route::get('/register', [RegisterController::class, 'create'])->name('register.create');
+    Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 });
 
 // Authenticated Routes
