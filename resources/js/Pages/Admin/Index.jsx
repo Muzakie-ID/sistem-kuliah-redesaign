@@ -104,6 +104,9 @@ export default function AdminIndex({ users = [], subjects = [], wahaConfigs = []
         configForm.setData('groups', updated);
     };
 
+    const isJidAssignedTo = (targetGroup, jid) =>
+        configForm.data.groups.some((c) => c.target_group === targetGroup && c.group_jid === jid);
+
     const handleFetchWahaGroups = async () => {
         setFetchingGroups(true);
         setFetchError('');
@@ -435,12 +438,27 @@ export default function AdminIndex({ users = [], subjects = [], wahaConfigs = []
                                                         <p className="text-[10px] font-mono text-ink-faint truncate">{g.id}</p>
                                                     </div>
                                                     <div className="flex items-center gap-1 shrink-0">
-                                                        <button type="button" onClick={() => assignFetchedJid('BB_THEORY', g.id)} className="assign-btn text-primary-700 dark:text-primary-300 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/15 dark:hover:bg-primary-500/25">Teori BB</button>
-                                                        <button type="button" onClick={() => assignFetchedJid('AA_THEORY', g.id)} className="assign-btn text-indigo-700 dark:text-indigo-300 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-500/15 dark:hover:bg-indigo-500/25">Teori AA</button>
-                                                        <button type="button" onClick={() => assignFetchedJid('B1_PRACTICUM', g.id)} className="assign-btn text-emerald-700 dark:text-emerald-300 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:hover:bg-emerald-500/25">Lab B1</button>
-                                                        <button type="button" onClick={() => assignFetchedJid('B2_PRACTICUM', g.id)} className="assign-btn text-purple-700 dark:text-purple-300 bg-purple-50 hover:bg-purple-100 dark:bg-purple-500/15 dark:hover:bg-purple-500/25">Lab B2</button>
-                                                        <button type="button" onClick={() => assignFetchedJid('A1_PRACTICUM', g.id)} className="assign-btn text-teal-700 dark:text-teal-300 bg-teal-50 hover:bg-teal-100 dark:bg-teal-500/15 dark:hover:bg-teal-500/25">Lab A1</button>
-                                                        <button type="button" onClick={() => assignFetchedJid('A2_PRACTICUM', g.id)} className="assign-btn text-orange-700 dark:text-orange-300 bg-orange-50 hover:bg-orange-100 dark:bg-orange-500/15 dark:hover:bg-orange-500/25">Lab A2</button>
+                                                        {[
+                                                            ['BB_THEORY', 'Teori BB', 'text-primary-700 dark:text-primary-300 bg-primary-50 hover:bg-primary-100 dark:bg-primary-500/15 dark:hover:bg-primary-500/25'],
+                                                            ['AA_THEORY', 'Teori AA', 'text-indigo-700 dark:text-indigo-300 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-500/15 dark:hover:bg-indigo-500/25'],
+                                                            ['B1_PRACTICUM', 'Lab B1', 'text-emerald-700 dark:text-emerald-300 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:hover:bg-emerald-500/25'],
+                                                            ['B2_PRACTICUM', 'Lab B2', 'text-purple-700 dark:text-purple-300 bg-purple-50 hover:bg-purple-100 dark:bg-purple-500/15 dark:hover:bg-purple-500/25'],
+                                                            ['A1_PRACTICUM', 'Lab A1', 'text-teal-700 dark:text-teal-300 bg-teal-50 hover:bg-teal-100 dark:bg-teal-500/15 dark:hover:bg-teal-500/25'],
+                                                            ['A2_PRACTICUM', 'Lab A2', 'text-orange-700 dark:text-orange-300 bg-orange-50 hover:bg-orange-100 dark:bg-orange-500/15 dark:hover:bg-orange-500/25'],
+                                                        ].map(([target, label, cls]) => {
+                                                            const active = isJidAssignedTo(target, g.id);
+                                                            return (
+                                                                <button
+                                                                    key={target}
+                                                                    type="button"
+                                                                    aria-pressed={active}
+                                                                    onClick={() => assignFetchedJid(target, g.id)}
+                                                                    className={`assign-btn ${cls} ${active ? 'ring-2 ring-current' : ''}`}
+                                                                >
+                                                                    {label}
+                                                                </button>
+                                                            );
+                                                        })}
                                                     </div>
                                                 </div>
                                             ))}
