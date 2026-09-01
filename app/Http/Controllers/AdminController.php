@@ -30,6 +30,7 @@ class AdminController extends Controller
                 'name' => $user->name,
                 'niu' => $user->niu,
                 'role' => $user->role,
+                'theory_class' => $user->theory_class,
                 'practicum_group' => $user->practicum_group,
                 'has_pin' => $user->pin_hash !== null,
                 'pj_subjects' => $user->pjSubjects->pluck('name')->values()->all(),
