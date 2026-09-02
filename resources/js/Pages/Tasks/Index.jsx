@@ -4,7 +4,7 @@ import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
 import Badge from '../../Components/Badge';
 import CountdownTimer from '../../Components/CountdownTimer';
 import CreateTaskModal from '../../Components/CreateTaskModal';
-import { ExternalLink, CheckCircle, Circle, Plus, Sparkles, Clock, FileText, PartyPopper, ClipboardList } from 'lucide-react';
+import { ExternalLink, CheckCircle, Circle, Plus, Sparkles, Clock, FileText, PartyPopper, ClipboardList, X } from 'lucide-react';
 
 export default function TasksIndex({ pendingTasks = [], completedTasks = [], manageableSubjects = [] }) {
     const { auth } = usePage().props;
@@ -12,6 +12,7 @@ export default function TasksIndex({ pendingTasks = [], completedTasks = [], man
 
     const [activeTab, setActiveTab] = useState('PENDING'); // 'PENDING' or 'COMPLETED'
     const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
+    const [detailTask, setDetailTask] = useState(null);
 
     const handleToggleTask = (taskId) => {
         router.post(route('tasks.toggle', taskId), {}, {
@@ -114,11 +115,15 @@ export default function TasksIndex({ pendingTasks = [], completedTasks = [], man
                                 </button>
 
                                 <div className="flex-1 min-w-0">
-                                    <h4 className={`font-extrabold text-sm text-ink leading-snug tracking-tight ${
-                                        task.is_completed ? 'line-through text-ink-faint' : ''
-                                    }`}>
+                                    <button
+                                        onClick={() => setDetailTask(task)}
+                                        className={`font-extrabold text-sm text-left leading-snug tracking-tight hover:text-primary-600 dark:hover:text-primary-400 transition-colors ${
+                                            task.is_completed ? 'line-through text-ink-faint' : 'text-ink'
+                                        }`}
+                                        title="Lihat Detail"
+                                    >
                                         {task.title}
-                                    </h4>
+                                    </button>
 
                                     {task.description && (
                                         <p className="text-xs text-ink-soft mt-1 leading-relaxed whitespace-pre-line">{task.description}</p>
@@ -182,7 +187,104 @@ export default function TasksIndex({ pendingTasks = [], completedTasks = [], man
                 onClose={() => setIsCreateTaskModalOpen(false)}
                 subjects={manageableSubjects}
             />
+
+            {/* Detail Task Modal */}
+            <TaskDetailModal task={detailTask} onClose={() => setDetailTask(null)} />
         </AuthenticatedLayout>
+    );
+}
+
+function TaskDetailModal({ task, onClose }) {
+    if (!task) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 overflow-y-auto scroll-smooth-panel bg-overlay backdrop-blur-sm flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Detail Tugas">
+            <div className="absolute inset-0" onClick={onClose} aria-hidden="true"></div>
+            <div className="relative bg-card/95 backdrop-blur-xl rounded-3xl max-w-lg w-full shadow-modal border border-line animate-scale-in my-8">
+                {/* Header */}
+                <div className="flex items-start justify-between gap-3 p-5 pb-4 border-b border-line-soft">
+                    <div className="min-w-0">
+                        <div className="flex items-center gap-1.5 flex-wrap gap-y-1 mb-1.5">
+                            <Badge variant={task.is_completed ? 'safe' : task.urgency}>
+                                {task.is_completed ? '✓ Selesai' : task.deadline_human}
+                            </Badge>
+                            <Badge variant="default">{task.subject_name}</Badge>
+                            <Badge variant={task.target_group.endsWith('_THEORY') ? 'theory' : 'practicum'}>
+                                {task.target_group.replace(/_(THEORY|PRACTICUM)$/, '')}
+                            </Badge>
+                        </div>
+                        <h3 className={`font-extrabold text-base text-ink tracking-tight leading-snug ${task.is_completed ? 'line-through text-ink-faint' : ''}`}>
+                            {task.title}
+                        </h3>
+                    </div>
+                    <button
+                        onClick={onClose}
+                        aria-label="Tutup"
+                        className="text-ink-faint hover:text-ink p-2 rounded-xl hover:bg-elevated transition-colors shrink-0"
+                    >
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
+
+                {/* Body */}
+                <div className="p-5 space-y-4">
+                    {task.description ? (
+                        <div>
+                            <h4 className="text-[11px] font-bold uppercase tracking-wider text-ink-faint mb-1.5">Deskripsi</h4>
+                            <p className="text-sm text-ink-soft leading-relaxed whitespace-pre-line">{task.description}</p>
+                        </div>
+                    ) : (
+                        <p className="text-sm text-ink-faint italic">Tidak ada deskripsi.</p>
+                    )}
+
+                    <div className="rounded-2xl bg-elevated/60 border border-line-soft p-4 space-y-2.5 text-xs">
+                        <div className="flex items-center gap-2">
+                            <Clock className="w-3.5 h-3.5 text-ink-faint shrink-0" />
+                            <span className="text-ink-soft"><strong className="text-ink">Deadline:</strong> {task.deadline_formatted} WIB</span>
+                        </div>
+                        {task.submission_format && (
+                            <div className="flex items-center gap-2">
+                                <FileText className="w-3.5 h-3.5 text-ink-faint shrink-0" />
+                                <span className="text-ink-soft"><strong className="text-ink">Format:</strong> {task.submission_format}</span>
+                            </div>
+                        )}
+                        {task.is_completed && task.completed_at && (
+                            <div className="flex items-center gap-2 text-safe font-semibold">
+                                <CheckCircle className="w-3.5 h-3.5" /> Diselesaikan {task.completed_at}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Footer */}
+                <div className="flex items-center justify-between gap-3 p-5 pt-4 border-t border-line-soft">
+                    {task.submission_url ? (
+                        <a
+                            href={task.submission_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-xs inline-flex items-center gap-1"
+                        >
+                            <span>Buka Pengumpulan</span>
+                            <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                    ) : (
+                        <span className="text-xs text-ink-faint">Pengumpulan via instruksi</span>
+                    )}
+                    <button
+                        onClick={() => { handleToggleTask(task.id); onClose(); }}
+                        className={`text-xs font-bold px-4 py-2 rounded-full transition-all active:scale-95 ${
+                            task.is_completed
+                                ? 'bg-elevated text-ink-soft hover:text-ink border border-line'
+                                : 'inline-flex items-center gap-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-btn'
+                        }`}
+                    >
+                        {!task.is_completed && <Sparkles className="w-3.5 h-3.5" />}
+                        {task.is_completed ? 'Batal Selesai' : '✓ Tandai Selesai'}
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 }
 
