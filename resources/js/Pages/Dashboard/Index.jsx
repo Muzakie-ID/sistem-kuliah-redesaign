@@ -98,7 +98,7 @@ export default function Dashboard({ todaySchedules = [], priorityTasks = [], man
                     <div className="space-y-3.5">
                         {todaySchedules.filter((s) => s.end_time >= new Date().toTimeString().slice(0, 5)).map((schedule) => (
                             <ScheduleCard
-                                key={schedule.id}
+                                key={`${schedule.id}-${schedule.is_makeup ? 'm' : 's'}`}
                                 schedule={schedule}
                                 isToday
                                 onManage={user?.is_pj ? (id) => openEmergencyModal(id) : null}
