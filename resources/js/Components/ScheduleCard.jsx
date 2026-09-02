@@ -1,6 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Video, MapPin, User, Clock, Info, CalendarClock, CalendarX2, Pencil, Trash2 } from 'lucide-react';
 import Badge from './Badge';
+
+// Badge LIVE + hitung mundur sisa kelas; hanya tampil saat jam sekarang di dalam rentang jadwal hari ini.
+// ponytail: belum ada countdown "mulai dalam X" untuk kelas berikutnya — tambahkan bila diminta.
+function LiveBadge({ start, end, disabled }) {
+    const [now, setNow] = useState(() => new Date());
+
+    useEffect(() => {
+        const t = setInterval(() => setNow(new Date()), 1000);
+        return () => clearInterval(t);
+    }, []);
+
+    if (disabled) return null;
+
+    const [sh, sm] = start.split(':').map(Number);
+    const [eh, em] = end.split(':').map(Number);
+    const base = new Date();
+    const startAt = new Date(base).setHours(sh, sm, 0, 0);
+    const endAt = new Date(base).setHours(eh, em, 0, 0);
+    const ts = now.getTime();
+
+    if (ts < startAt || ts > endAt) return null;
+
+    const sisa = Math.max(0, endAt - ts);
+    const pad = (n) => String(n).padStart(2, '0');
+
+    return (
+        <span
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-700 dark:text-emerald-300 text-[11px] font-extrabold uppercase tracking-wider"
+            role="status"
+            aria-label={`Sedang berlangsung, sisa ${pad(Math.floor(sisa / 3600000))} jam ${pad(Math.floor((sisa % 3600000) / 60000))} menit`}
+        >
+            <span className="relative flex w-2 h-2">
+                <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
+                <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500"></span>
+            </span>
+            LIVE
+            <span className="font-mono tabular-nums normal-case tracking-normal">
+                sisa {pad(Math.floor(sisa / 3600000))}:{pad(Math.floor((sisa % 3600000) / 60000))}:{pad(Math.floor((sisa % 60000) / 1000))}
+            </span>
+        </span>
+    );
+}
 
 /**
  * Card jadwal tunggal. Dipakai di Dashboard dan Schedules.
@@ -37,6 +79,7 @@ export default function ScheduleCard({ schedule, onManage, manageLabel = 'Edit S
 
             <div className="flex items-start justify-between gap-2 mb-2.5">
                 <div className="flex items-center gap-1.5 flex-wrap gap-y-1">
+                    <LiveBadge start={schedule.start_time} end={schedule.end_time} disabled={isCancelled} />
                     {isOnline && <Badge variant="online"><Video className="w-3 h-3 mr-1" /> DARING (ZOOM/MEET)</Badge>}
                     {isRescheduled && <Badge variant="rescheduled"><CalendarClock className="w-3 h-3 mr-1" /> PERUBAHAN JADWAL</Badge>}
                     {isCancelled && <Badge variant="cancelled"><CalendarX2 className="w-3 h-3 mr-1" /> DIBATALKAN</Badge>}
