@@ -467,22 +467,31 @@ export default function AdminIndex({ users = [], subjects = [], wahaConfigs = []
                                 )}
 
                                 <div className="space-y-2.5">
-                                    {configForm.data.groups.map((grp, idx) => (
-                                        <div key={grp.id} className="p-3.5 bg-elevated/60 rounded-2xl border border-line-soft">
-                                            <div className="flex items-center justify-between gap-2 mb-2">
-                                                <span className="text-xs font-bold text-ink truncate">{grp.group_name}</span>
-                                                <Badge variant="primary">{grp.target_group}</Badge>
+                                    {configForm.data.groups.map((grp, idx) => {
+                                        const waGroup = fetchedGroups.find((f) => f.id === grp.group_jid);
+                                        return (
+                                            <div key={grp.id} className="p-3.5 bg-elevated/60 rounded-2xl border border-line-soft">
+                                                <div className="flex items-center justify-between gap-2 mb-2">
+                                                    <span className="text-xs font-bold text-ink truncate">{grp.group_name}</span>
+                                                    <Badge variant="primary">{grp.target_group}</Badge>
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    placeholder="120363000000000000@g.us"
+                                                    value={grp.group_jid}
+                                                    onChange={(e) => handleGroupJidChange(idx, e.target.value)}
+                                                    className="w-full rounded-xl border border-line bg-card px-3 py-2 text-xs font-mono text-ink placeholder:text-ink-faint focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all"
+                                                    aria-label={`JID untuk ${grp.group_name}`}
+                                                />
+                                                {waGroup && (
+                                                    <p className="mt-1.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300 flex items-center gap-1">
+                                                        <CheckCircle2 className="w-3 h-3 shrink-0" />
+                                                        {waGroup.name}
+                                                    </p>
+                                                )}
                                             </div>
-                                            <input
-                                                type="text"
-                                                placeholder="120363000000000000@g.us"
-                                                value={grp.group_jid}
-                                                onChange={(e) => handleGroupJidChange(idx, e.target.value)}
-                                                className="w-full rounded-xl border border-line bg-card px-3 py-2 text-xs font-mono text-ink placeholder:text-ink-faint focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all"
-                                                aria-label={`JID untuk ${grp.group_name}`}
-                                            />
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </div>
 
