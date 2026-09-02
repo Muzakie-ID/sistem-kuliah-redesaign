@@ -96,7 +96,7 @@ export default function Dashboard({ todaySchedules = [], priorityTasks = [], man
                     />
                 ) : (
                     <div className="space-y-3.5">
-                        {todaySchedules.map((schedule) => (
+                        {todaySchedules.filter((s) => s.end_time >= new Date().toTimeString().slice(0, 5)).map((schedule) => (
                             <ScheduleCard
                                 key={schedule.id}
                                 schedule={schedule}

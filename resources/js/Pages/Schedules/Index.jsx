@@ -17,6 +17,8 @@ export default function SchedulesIndex({ weeklySchedules = {}, makeupSchedules =
     const [formModal, setFormModal] = useState(null); // null | { schedule } | { schedule: null }
     const [confirmDialog, setConfirmDialog] = useState(null); // null | { title, message, confirmLabel, action }
 
+    const isTodaySelected = selectedDay === currentDayOfWeek;
+
     const canManage = user?.is_pj;
 
     const days = [
@@ -30,6 +32,12 @@ export default function SchedulesIndex({ weeklySchedules = {}, makeupSchedules =
 
     const currentDaySchedules = weeklySchedules[selectedDay] || [];
     const currentDayMakeups = makeupSchedules[selectedDay] || [];
+
+    // Hari ini: sembunyikan jadwal yang sudah selesai (end_time terlewat), tampil yang belum mulai & sedang berlangsung.
+    const nowHm = new Date().toTimeString().slice(0, 5);
+    const visibleSchedules = isTodaySelected
+        ? currentDaySchedules.filter((s) => s.end_time >= nowHm)
+        : currentDaySchedules;
 
     const openEmergencyModal = (scheduleId = null) => {
         setSelectedScheduleId(scheduleId);
@@ -87,7 +95,7 @@ export default function SchedulesIndex({ weeklySchedules = {}, makeupSchedules =
                 </h3>
                 <div className="flex items-center gap-2">
                     <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-elevated text-ink-soft">
-                        {currentDaySchedules.length + currentDayMakeups.length} Kelas
+                        {visibleSchedules.length + currentDayMakeups.length} Kelas
                     </span>
                     {canManage && (
                         <button
@@ -102,7 +110,7 @@ export default function SchedulesIndex({ weeklySchedules = {}, makeupSchedules =
             </div>
 
             {/* Schedule Cards */}
-            {currentDaySchedules.length === 0 && currentDayMakeups.length === 0 ? (
+            {visibleSchedules.length === 0 && currentDayMakeups.length === 0 ? (
                 <div className="rounded-3xl p-10 text-center bg-card border border-dashed border-line/60 animate-fade-in-up">
                     <span className="inline-grid place-items-center w-14 h-14 rounded-2xl bg-elevated text-ink-faint mb-3">
                         <Coffee className="w-7 h-7" />
@@ -112,7 +120,7 @@ export default function SchedulesIndex({ weeklySchedules = {}, makeupSchedules =
                 </div>
             ) : (
                 <div className="space-y-3.5 animate-fade-in-up">
-                    {currentDaySchedules.map((schedule) => (
+                    {visibleSchedules.map((schedule) => (
                         <ScheduleCard
                             key={schedule.id}
                             schedule={schedule}
