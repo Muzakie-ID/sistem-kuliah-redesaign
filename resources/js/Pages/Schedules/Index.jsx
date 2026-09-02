@@ -33,11 +33,8 @@ export default function SchedulesIndex({ weeklySchedules = {}, makeupSchedules =
     const currentDaySchedules = weeklySchedules[selectedDay] || [];
     const currentDayMakeups = makeupSchedules[selectedDay] || [];
 
-    // Hari ini: sembunyikan jadwal yang sudah selesai (end_time terlewat), tampil yang belum mulai & sedang berlangsung.
-    const nowHm = new Date().toTimeString().slice(0, 5);
-    const visibleSchedules = isTodaySelected
-        ? currentDaySchedules.filter((s) => s.end_time >= nowHm)
-        : currentDaySchedules;
+    // Jadwal yang sudah selesai tetap tampil (diredupkan oleh ScheduleCard), bukan disembunyikan.
+    const visibleSchedules = currentDaySchedules;
 
     const openEmergencyModal = (scheduleId = null) => {
         setSelectedScheduleId(scheduleId);
@@ -140,6 +137,7 @@ export default function SchedulesIndex({ weeklySchedules = {}, makeupSchedules =
                         <ScheduleCard
                             key={`makeup-${schedule.override.id}`}
                             schedule={schedule}
+                            isToday={isTodaySelected}
                         />
                     ))}
                 </div>

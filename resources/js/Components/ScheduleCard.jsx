@@ -70,6 +70,10 @@ export default function ScheduleCard({ schedule, onManage, manageLabel = 'Edit S
     const isRescheduled = schedule.status === 'RESCHEDULED' || schedule.status === 'MAKEUP_CLASS';
     const isCancelled = schedule.status === 'CANCELLED';
 
+    // Kelas hari ini yang sudah lewat jam selesai → diredupkan, tetap tampil.
+    const nowHm = new Date().toTimeString().slice(0, 5);
+    const isPast = isToday && !isCancelled && schedule.end_time < nowHm;
+
     const meetingUrl = schedule.meeting_url || schedule.override?.meeting_url;
     const meetingPasscode = schedule.meeting_passcode || schedule.override?.meeting_passcode;
     const reason = schedule.reason || schedule.override?.reason;
@@ -89,7 +93,7 @@ export default function ScheduleCard({ schedule, onManage, manageLabel = 'Edit S
 
     return (
         <article className={`relative overflow-hidden rounded-3xl border p-4 pl-5 transition-all shadow-card bg-card ${
-            isCancelled ? 'opacity-60 border-line' : 'border-line/70 hover:shadow-card-hover hover:-translate-y-0.5'
+            isCancelled || isPast ? 'opacity-60 border-line' : 'border-line/70 hover:shadow-card-hover hover:-translate-y-0.5'
         }`}>
             {/* Left status rail */}
             <span className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${railClass}`} aria-hidden="true"></span>
