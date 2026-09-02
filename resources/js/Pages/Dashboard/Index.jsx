@@ -100,6 +100,7 @@ export default function Dashboard({ todaySchedules = [], priorityTasks = [], man
                             <ScheduleCard
                                 key={schedule.id}
                                 schedule={schedule}
+                                isToday
                                 onManage={user?.is_pj ? (id) => openEmergencyModal(id) : null}
                             />
                         ))}
