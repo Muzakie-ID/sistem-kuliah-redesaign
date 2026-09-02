@@ -369,18 +369,7 @@ class DatabaseSeeder extends Seeder
             'lecturer_name' => 'Dr. Ir. Ronald Adrian, S.T., M.Eng., IPM.',
         ]);
 
-        // 6. SCHEDULE OVERRIDE CONTOH (Kelas Praktikum Teknik Komputer dialihkan Zoom untuk hari ini)
-        $today = Carbon::today();
-        ScheduleOverride::create([
-            'schedule_id' => $schPrakTekkom->id,
-            'original_date' => $today->format('Y-m-d'),
-            'status' => 'ONLINE',
-            'meeting_url' => 'https://ugm-id.zoom.us/j/9876543210',
-            'meeting_passcode' => '123456',
-            'reason' => 'Dosen bertugas ke luar kota, kuliah dialihkan secara daring via Zoom Meeting. Wajib on-cam.',
-            'is_notified' => true,
-            'created_by' => $admin->id,
-        ]);
+        // 6. SCHEDULE OVERRIDE — dikosongkan (override diinput manual via aplikasi)
 
         // 7. TASKS — dikosongkan (tugas diinput manual via aplikasi)
     }
