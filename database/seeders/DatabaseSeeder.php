@@ -172,7 +172,7 @@ class DatabaseSeeder extends Seeder
             'day_of_week' => 3,
             'start_time' => '09:15:00',
             'end_time' => '10:55:00',
-            'room' => 'R. KULIAH CM 201 (atau HU 208)',
+            'room' => 'R. KULIAH HU 208',
             'lecturer_name' => 'Ardhi Wicaksono Santoso, S.Kom., M.Cs.',
         ]);
 
