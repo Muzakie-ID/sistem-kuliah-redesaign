@@ -9,6 +9,7 @@ use App\Services\WahaService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -231,6 +232,10 @@ class ScheduleController extends Controller
             return redirect()->back()->with('error', 'Anda bukan PJ mata kuliah ini.');
         }
 
+        if ($error = $this->overlapError($validated)) {
+            throw ValidationException::withMessages(['start_time' => $error]);
+        }
+
         Schedule::create($validated);
 
         return redirect()->back()->with('success', 'Jadwal berhasil ditambahkan.');
@@ -241,6 +246,10 @@ class ScheduleController extends Controller
         $user = Auth::user();
         if (!$user->isPjForSubject($schedule->subject_id)) {
             return redirect()->back()->with('error', 'Anda tidak memiliki hak akses untuk jadwal ini.');
+        }
+
+        if ($error = $this->overlapError($this->validateSchedule($request), $schedule->id)) {
+            throw ValidationException::withMessages(['start_time' => $error]);
         }
 
         $schedule->update($this->validateSchedule($request));
@@ -258,6 +267,35 @@ class ScheduleController extends Controller
         $schedule->delete();
 
         return redirect()->back()->with('success', 'Jadwal berhasil dihapus.');
+    }
+
+    /**
+     * Tolak jika ada jadwal lain di kelas (target_group) & hari yang sama dengan jam tumpang tindih.
+     * ponytail: cek bentrok hanya per target_group; cek bentrok ruangan/dosen bisa ditambah nanti bila perlu.
+     */
+    private function overlapError(array $data, ?int $ignoreId = null): ?string
+    {
+        $overlap = Schedule::where('target_group', $data['target_group'])
+            ->where('day_of_week', $data['day_of_week'])
+            ->where('start_time', '<', $data['end_time'])
+            ->where('end_time', '>', $data['start_time'])
+            ->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))
+            ->first();
+
+        if (!$overlap) {
+            return null;
+        }
+
+        $dayNames = [1 => 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+
+        return sprintf(
+            'Bentrok dengan jadwal %s (%s, %s-%s, %s).',
+            $overlap->subject->name ?? 'mata kuliah lain',
+            $dayNames[$data['day_of_week']] ?? '-',
+            substr($overlap->start_time, 0, 5),
+            substr($overlap->end_time, 0, 5),
+            $overlap->room,
+        );
     }
 
     private function validateSchedule(Request $request): array

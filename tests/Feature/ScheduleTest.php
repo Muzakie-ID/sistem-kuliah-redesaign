@@ -136,4 +136,47 @@ class ScheduleTest extends TestCase
 
         $response->assertSessionHas('error');
     }
+
+    public function test_pj_cannot_create_overlapping_schedule_in_same_group_and_day(): void
+    {
+        $pj = User::create([
+            'niu' => '33333',
+            'name' => 'PJ Bentrok',
+            'pin_hash' => Hash::make('123456'),
+            'role' => 'PJ',
+            'practicum_group' => 'B1',
+            'is_active' => true,
+        ]);
+
+        $subject = Subject::create([
+            'code' => 'TRI202',
+            'name' => 'Jaringan Komputer',
+            'type' => 'THEORY',
+        ]);
+
+        CoursePj::create(['user_id' => $pj->id, 'subject_id' => $subject->id]);
+
+        Schedule::create([
+            'subject_id' => $subject->id,
+            'target_group' => 'BB_THEORY',
+            'day_of_week' => 1,
+            'start_time' => '08:00:00',
+            'end_time' => '09:40:00',
+            'room' => 'Ruang 201',
+            'lecturer_name' => 'Pak Budi',
+        ]);
+
+        $response = $this->actingAs($pj)->post('/schedules', [
+            'subject_id' => $subject->id,
+            'target_group' => 'BB_THEORY',
+            'day_of_week' => 1,
+            'start_time' => '09:00',
+            'end_time' => '10:40',
+            'room' => 'Ruang 202',
+            'lecturer_name' => 'Pak Budi',
+        ]);
+
+        $response->assertSessionHasErrors('start_time');
+        $this->assertDatabaseCount('schedules', 1);
+    }
 }
