@@ -124,7 +124,7 @@ export default function SchedulesIndex({ weeklySchedules = {}, makeupSchedules =
                         <ScheduleCard
                             key={schedule.id}
                             schedule={schedule}
-                            isToday={isToday}
+                            isToday={isTodaySelected}
                             onManage={canManage ? (id) => openEmergencyModal(id) : null}
                             manageLabel="Kelola / Override"
                             onEdit={canManage ? () => setFormModal({ schedule }) : null}
