@@ -269,6 +269,7 @@ class WahaService
         $endTime = substr($schedule->end_time, 0, 5);
         $room = $schedule->room;
         $lecturer = $schedule->lecturer_name;
+        $descNote = $schedule->description ? "\n📝 Info     : {$schedule->description}" : '';
 
         $overrideNote = '';
         if ($override) {
@@ -287,6 +288,7 @@ class WahaService
                "⏰ Jam     : {$startTime} - {$endTime} WIB\n".
                "📍 Ruang   : {$room}\n".
                "👨‍🏫 Pengajar: {$lecturer}".
+               ($descNote ? "{$descNote}" : '').
                ($overrideNote ? "{$overrideNote}\n" : "\n").
                "\nYuk segera bersiap dan menuju kelas / ruang meeting!\n".
                "🔗 Akses Portal: https://{$cleanDomain}";
