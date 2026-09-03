@@ -73,6 +73,7 @@ class ScheduleController extends Controller
                 'end_time' => substr($schedule->end_time, 0, 5),
                 'room' => $schedule->room,
                 'lecturer_name' => $schedule->lecturer_name,
+                'description' => $schedule->description,
                 'status' => $status,
                 'override' => $override ? [
                     'id' => $override->id,
@@ -115,6 +116,7 @@ class ScheduleController extends Controller
                 'end_time' => $makeup->new_end_time ? substr($makeup->new_end_time, 0, 5) : substr($schedule->end_time, 0, 5),
                 'room' => $makeup->new_room ?? $schedule->room,
                 'lecturer_name' => $schedule->lecturer_name,
+                'description' => $schedule->description,
                 'status' => $makeup->status,
                 'override' => [
                     'id' => $makeup->id,
@@ -309,6 +311,7 @@ class ScheduleController extends Controller
             'room' => ['required', 'string', 'max:50'],
             'lecturer_name' => ['required', 'string', 'max:100'],
             'meeting_url' => ['nullable', 'string', 'max:500'],
+            'description' => ['nullable', 'string', 'max:1000'],
         ]);
     }
 }

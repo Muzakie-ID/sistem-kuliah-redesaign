@@ -20,6 +20,7 @@ class Schedule extends Model
         'room',
         'meeting_url',
         'lecturer_name',
+        'description',
     ];
 
     protected function casts(): array

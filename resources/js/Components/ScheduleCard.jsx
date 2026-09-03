@@ -136,6 +136,13 @@ export default function ScheduleCard({ schedule, onManage, manageLabel = 'Edit S
                     )}
                 </div>
 
+                {schedule.description && (
+                    <div className="flex items-start gap-1.5">
+                        <Info className="w-3.5 h-3.5 text-ink-faint shrink-0" />
+                        <span>{schedule.description}</span>
+                    </div>
+                )}
+
                 {movedTo && (
                     <div className="flex items-center gap-1.5">
                         <CalendarClock className="w-3.5 h-3.5 text-amber-500 shrink-0" />

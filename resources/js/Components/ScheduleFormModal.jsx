@@ -34,6 +34,7 @@ export default function ScheduleFormModal({ isOpen, onClose, subjects = [], sche
         room: schedule?.room ?? '',
         lecturer_name: schedule?.lecturer_name ?? '',
         meeting_url: schedule?.meeting_url ?? '',
+        description: schedule?.description ?? '',
     });
 
     const handleSubmit = (e) => {
@@ -104,6 +105,10 @@ export default function ScheduleFormModal({ isOpen, onClose, subjects = [], sche
 
                     <Field label="Link Meeting (opsional)" error={errors.meeting_url}>
                         <input type="url" placeholder="https://zoom.us/j/..." value={data.meeting_url} onChange={(e) => setData('meeting_url', e.target.value)} className={inputCls} />
+                    </Field>
+
+                    <Field label="Deskripsi (opsional)" error={errors.description}>
+                        <textarea rows={2} maxLength={1000} placeholder="Catatan tambahan, mis. bawa laptop, materi pertemuan ke-3" value={data.description} onChange={(e) => setData('description', e.target.value)} className={inputCls + ' resize-none'} />
                     </Field>
 
                     <div className="flex items-center justify-end gap-2 pt-1">
