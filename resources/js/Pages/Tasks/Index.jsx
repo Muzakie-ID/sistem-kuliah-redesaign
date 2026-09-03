@@ -198,7 +198,7 @@ function TaskDetailModal({ task, onClose }) {
     if (!task) return null;
 
     return (
-        <div className="fixed inset-0 z-50 overflow-y-auto scroll-smooth-panel bg-overlay backdrop-blur-sm flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Detail Tugas">
+        <div className="fixed inset-0 z-50 overflow-y-auto scroll-smooth-panel bg-overlay backdrop-blur-sm grid place-items-center p-4" role="dialog" aria-modal="true" aria-label="Detail Tugas">
             <div className="absolute inset-0" onClick={onClose} aria-hidden="true"></div>
             <div className="relative bg-card/95 backdrop-blur-xl rounded-3xl max-w-lg w-full shadow-modal border border-line animate-scale-in my-8">
                 {/* Header */}

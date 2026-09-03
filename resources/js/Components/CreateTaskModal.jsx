@@ -29,7 +29,7 @@ export default function CreateTaskModal({ isOpen, onClose, subjects = [] }) {
     const inputCls = 'w-full rounded-xl border border-line bg-elevated px-3 py-2.5 text-sm text-ink placeholder:text-ink-faint outline-none focus:border-primary-500 focus:bg-card focus:ring-4 focus:ring-primary-500/15 transition-all';
 
     return (
-        <div className="fixed inset-0 z-50 overflow-y-auto scroll-smooth-panel bg-overlay backdrop-blur-sm flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Tambah Tugas">
+        <div className="fixed inset-0 z-50 overflow-y-auto scroll-smooth-panel bg-overlay backdrop-blur-sm grid place-items-center p-4" role="dialog" aria-modal="true" aria-label="Tambah Tugas">
             <div className="bg-card/95 backdrop-blur-xl rounded-3xl max-w-lg w-full shadow-modal relative border border-line animate-scale-in my-8">
                 {/* Header */}
                 <div className="flex items-start justify-between gap-3 p-5 pb-4 border-b border-line-soft">
