@@ -154,7 +154,7 @@ export default function EmergencyOverrideModal({ isOpen, onClose, schedules = []
                     {/* Jika Reschedule atau Makeup Class */}
                     {(data.status === 'RESCHEDULED' || data.status === 'MAKEUP_CLASS') && (
                         <div className="space-y-3 p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/30 animate-fade-in-up">
-                            <div className="grid grid-cols-2 gap-2.5">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                 <Field label="Tanggal Baru" tinted>
                                     <input type="date" value={data.new_date} onChange={(e) => setData('new_date', e.target.value)} className={inputCls} />
                                 </Field>
@@ -162,7 +162,7 @@ export default function EmergencyOverrideModal({ isOpen, onClose, schedules = []
                                     <input type="text" placeholder="Lab Jaringan 2" value={data.new_room} onChange={(e) => setData('new_room', e.target.value)} className={inputCls} />
                                 </Field>
                             </div>
-                            <div className="grid grid-cols-2 gap-2.5">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                 <Field label="Jam Mulai Baru" tinted>
                                     <input type="time" value={data.new_start_time} onChange={(e) => setData('new_start_time', e.target.value)} className={inputCls} />
                                 </Field>
